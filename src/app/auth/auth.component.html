@@ -1,0 +1,4 @@
+<mat-card fxLayout="column" fxLayoutAlign="center center" class="mat-elevation-z4">
+  <app-register *ngIf="!hasAnAccount"></app-register>
+  <app-login *ngIf="hasAnAccount" (regEmitter)="hasAnAccount = false"></app-login>
+</mat-card>

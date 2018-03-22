@@ -1,0 +1,31 @@
+<h2>Login:</h2>
+
+<form (ngSubmit)="onSubmit(f)" #f="ngForm" fxLayout="column">
+
+  <mat-form-field color="primary">
+      <input matInput 
+      placeholder="email"
+      name="email"
+      autocomplete="email"
+      ngModel
+      required>
+      <mat-error>Invalid or missing email.</mat-error>
+    </mat-form-field>
+  
+    <mat-form-field color="primary" fxFlex="45%">
+      <input matInput 
+      placeholder="password"
+      name="password"
+      type="password"
+      autocomplete="new-password"
+      ngModel
+      required>
+      <mat-error>Password should have at least 6 characters.</mat-error>
+    </mat-form-field>
+
+    <button *ngIf="!(isLoading$ | async)" type="submit" mat-raised-button color="primary" [disabled]="!f.valid">Login</button>
+    <mat-spinner *ngIf="isLoading$ | async" color="primary" diameter="40"></mat-spinner>
+
+</form>
+
+<p class="notregged">Don't have an account yet? <a href="#" (click)="emitRegCall()"> Register</a></p>

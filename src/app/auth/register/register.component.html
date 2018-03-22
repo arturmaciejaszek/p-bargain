@@ -1,0 +1,51 @@
+<h2>Register:</h2>
+
+<form [formGroup]="regForm" (ngSubmit)="onSubmit()" fxLayout="column">
+
+  <mat-form-field color="primary">
+    <input matInput 
+    placeholder="first name"
+    name="name"
+    autocomplete="name"
+    formControlName="name"
+    required>
+    <mat-error>Name should have at least 3 characters.</mat-error>
+  </mat-form-field>
+  
+  <mat-form-field color="primary">
+    <input matInput 
+    placeholder="email"
+    name="email"
+    autocomplete="email"
+    formControlName="email"
+    required>
+    <mat-error>Invalid or missing email.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field color="primary" fxFlex="45%">
+    <input matInput 
+    placeholder="password"
+    name="password"
+    type="password"
+    autocomplete="new-password"
+    formControlName="password"
+    required>
+    <mat-error>Password should have at least 6 characters.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field color="primary" fxFlex="45%">
+    <input matInput 
+    placeholder="confirm password"
+    name="cPassword"
+    type="password"
+    autocomplete="off"
+    formControlName="cPassword"
+    required>
+    <mat-error *ngIf="regForm.hasError('mismatch')">Mismatched passwords.</mat-error>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="terms" color="primary" required>Terms and conditions</mat-checkbox>
+
+  <button *ngIf="!(isLoading$ | async)" type="submit" mat-raised-button color="primary" [disabled]="regForm.invalid">Register</button>
+  <mat-spinner *ngIf="isLoading$ | async" color="primary" diameter="40"></mat-spinner>
+</form>
