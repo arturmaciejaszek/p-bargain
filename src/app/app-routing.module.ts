@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard } from './auth/auth.guard';
 import { AuthComponent } from './auth/auth.component';
+import { ShellTabsComponent } from './shell/shell-tabs/shell-tabs.component';
 
 const routes: Routes = [
-  { path: '', component: AuthComponent },
+  { path: '', component: ShellTabsComponent, canActivate: [AuthGuard]},
+  { path: 'auth', component: AuthComponent},
+  { path: 'profile', loadChildren: './user/user.module#UserModule', canLoad: [AuthGuard]},
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
+  providers: [AuthGuard]
 })
 export class AppRoutingModule {}

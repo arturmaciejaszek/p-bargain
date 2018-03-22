@@ -1,0 +1,13 @@
+<div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
+  <h1>Select your best frame</h1>
+  <div>
+    <img-cropper #cropper [image]="data" [settings]="cropperSettings"></img-cropper><br>
+  </div>
+
+  <mat-progress-bar mode="determinate" [value]="uploadPercent | async"></mat-progress-bar>
+
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <button mat-raised-button color="primary" (click)="upload()">Confirm</button>
+    <button mat-raised-button color="primary" (click)="discard()">Discard</button>
+  </div>
+</div>

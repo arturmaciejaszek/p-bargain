@@ -1,0 +1,49 @@
+.middle {
+    margin-bottom: 5rem;
+}
+
+.container {
+    position: relative;
+
+    & > button {
+        visibility: hidden;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    & > input {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    &:hover > button {
+        visibility: visible;
+    }
+
+    &:hover > img {
+        filter: blur(3px) brightness(80%);
+    }
+}
+
+.avatar {
+    object-fit: cover;
+    border-radius:50%;
+    width: 240px;
+    height: 240px;
+    margin-left: .5rem;
+    border: 5px solid black;
+}
+
+h3 {
+    margin-bottom: 0;
+}
+
+h1, h3 {
+    text-align: center;
+}

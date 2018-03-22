@@ -1,14 +1,14 @@
 import { Action } from '@ngrx/store';
 
-export const SET_AUTH = '[Auth] Set Authenticated';
-export const SET_UNAUTH = '[Auth] Set Unauthenticated';
+export const SET_AUTHENTICATED = '[Auth] Set Authenticated';
+export const SET_UNAUTHENTICATED = '[Auth] Set Unauthenticated';
 
 export class SetAuthenticated implements Action {
-  readonly type = SET_AUTH;
+  readonly type = SET_AUTHENTICATED;
 }
 
 export class SetUnauthenticated implements Action {
-  readonly type = SET_UNAUTH;
+  readonly type = SET_UNAUTHENTICATED;
 }
 
 export type AuthActions = SetAuthenticated | SetUnauthenticated;

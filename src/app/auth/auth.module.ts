@@ -20,7 +20,9 @@ import { LoginComponent } from './login/login.component';
         FormsModule,
         AngularFireAuthModule
     ],
-    exports: [],
+    exports: [
+        AuthComponent
+    ],
     providers: [],
 })
 export class AuthModule { }

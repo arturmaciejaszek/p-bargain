@@ -1,3 +1,18 @@
-<p>
-  user works!
-</p>
+<div class="left">
+
+</div>
+
+<div class="middle">
+  <h3>Hello</h3>
+  <h1>{{ user?.name }}</h1>
+  
+  <div class="container">
+    <img class="avatar" [src]="user?.photoURL" alt="user photo">
+    <button mat-fab (click)="upload.click()" color="primary">Upload</button>
+    <input type="file" accept="image/*" (change)="uploadPhoto($event)" #upload>
+  </div>
+</div>
+
+<div class="right">
+
+</div>
