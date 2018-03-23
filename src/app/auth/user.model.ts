@@ -6,4 +6,6 @@ export interface User {
     town?: string;
     status?: string;
     premium?: boolean;
+    fastbuy?: boolean;
+    rank?: number;
 }

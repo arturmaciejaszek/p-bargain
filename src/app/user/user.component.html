@@ -1,18 +1,45 @@
-<div class="left">
+<div fxLayout="row" class="wrapper">
+  <div class="left" fxFlex="25%">
 
-</div>
-
-<div class="middle">
-  <h3>Hello</h3>
-  <h1>{{ user?.name }}</h1>
-  
-  <div class="container">
-    <img class="avatar" [src]="user?.photoURL" alt="user photo">
-    <button mat-fab (click)="upload.click()" color="primary">Upload</button>
-    <input type="file" accept="image/*" (change)="uploadPhoto($event)" #upload>
   </div>
-</div>
 
-<div class="right">
+  <div class="middle" fxFlex="50%">
+    <h3>Hello</h3>
+    <h1>{{ user?.name }}</h1>
+    
+    <div class="container" fxLayoutAlign="center center">
+      <img class="avatar" [src]="user?.photoURL" alt="user photo">
+      <button mat-fab (click)="upload.click()" color="primary">Upload</button>
+      <input type="file" accept="image/*" (change)="uploadPhoto($event)" #upload>
+    </div>
+  </div>
 
+  <div class="right" fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between">
+
+    <div>
+      <h4>Stars Rank</h4>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <span>{{ user?.rank }} </span>
+        <img class="star" src="./assets/img/star.svg" alt="star icon">
+      </div>
+    </div>
+
+    <div fxLayout="column">
+      <h5>Settings</h5>
+
+      <mat-form-field fxFlexAlign="end">
+        <input matInput placeholder="Town" #townInput [formControl]="townControl" [value]="user?.town">
+      </mat-form-field>
+
+      <!-- FAST BUY MEANS THAT THERE WILL BE NO CONFIRMATION PROMPT ON BUYIN -->
+      <mat-radio-group (change)="updateFastBuy($event)" [value]="user?.fastBuy">
+        <mat-radio-button color="primary" value="true">Fast Buy</mat-radio-button>
+        <mat-radio-button color="primary" value="false">Careful Buy</mat-radio-button>
+      </mat-radio-group>
+
+      <p>Would you like to change your password? <a href="javascript:void(0);" routerLink="/auth/changePass">Change</a></p>
+
+    </div>
+
+  </div>
 </div>

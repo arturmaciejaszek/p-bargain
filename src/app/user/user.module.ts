@@ -5,6 +5,7 @@ import { SharedModule } from './../shared/shared.module';
 import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
 import { CropComponent } from './crop/crop.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import { CropComponent } from './crop/crop.component';
     imports: [
         SharedModule,
         UserRoutingModule,
+        ReactiveFormsModule
     ],
     exports: [],
     providers: [],

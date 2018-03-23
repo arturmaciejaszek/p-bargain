@@ -60,7 +60,10 @@ export class AuthService {
             name: name,
             uid: user.uid,
             email: user.email,
-            photoURL: './assets/img/thumb-anon.jpg'
+            photoURL: './assets/img/thumb-anon.jpg',
+            fastBuy: 'false',
+            town: '',
+            rank: 0
         };
         userRef.set(newData, {merge: true});
     }
