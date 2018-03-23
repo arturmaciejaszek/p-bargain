@@ -17,3 +17,13 @@ body {
     margin: 0;
     box-sizing: border-box;
 }
+
+.pac-icon, .pac-icon-marker{
+    display: none;
+}
+
+// DEVIANT ME , this removes 'powered by google' which i shouldt actually remove
+.pac-container:after {
+    background-image: none !important;
+    height: 0px;
+}

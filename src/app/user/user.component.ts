@@ -30,7 +30,6 @@ export class UserComponent implements OnInit {
 
     autocomplete.addListener('place_changed', () => {
       const town = autocomplete.getPlace();
-      console.log(town);
       this.authService.updateData(this.user.uid, {
         town: town.address_components[0].short_name + ', ' + town.address_components[3].short_name
       });

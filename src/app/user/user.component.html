@@ -31,6 +31,7 @@
         <input matInput placeholder="Town" #townInput [formControl]="townControl" [value]="user?.town">
       </mat-form-field>
 
+
       <!-- FAST BUY MEANS THAT THERE WILL BE NO CONFIRMATION PROMPT ON BUYIN -->
       <mat-radio-group (change)="updateFastBuy($event)" [value]="user?.fastBuy">
         <mat-radio-button color="primary" value="true">Fast Buy</mat-radio-button>
