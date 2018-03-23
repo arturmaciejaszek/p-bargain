@@ -12,7 +12,6 @@ import {
   MatDialogModule,
   MatProgressBarModule,
   MatRadioModule,
-  MatAutocompleteModule
   } from '@angular/material';
 
 @NgModule({
@@ -29,7 +28,6 @@ import {
       MatDialogModule,
       MatProgressBarModule,
       MatRadioModule,
-      MatAutocompleteModule
     ],
     exports: [
       MatToolbarModule,
@@ -44,7 +42,6 @@ import {
       MatDialogModule,
       MatProgressBarModule,
       MatRadioModule,
-      MatAutocompleteModule
     ]
 })
 export class MaterialModule {}
