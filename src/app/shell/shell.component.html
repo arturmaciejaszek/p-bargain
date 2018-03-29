@@ -18,7 +18,6 @@
         <button mat-menu-item >Bargains</button>
         <button mat-menu-item >Saved</button>
         <button mat-menu-item routerLink="/profile" >Profile</button>
-        <!-- <button mat-menu-item >Settings</button> -->
         <button mat-menu-item (click)="onLogout()">Logout</button>
       </mat-menu>
     </div>
@@ -27,6 +26,7 @@
   <!-- THE MAIN APP -->
 <div class="bounds" fxFlex fxLayoutAlign="center center">
   <router-outlet></router-outlet>
+  <app-add-item></app-add-item>
 </div>
 
 </div>

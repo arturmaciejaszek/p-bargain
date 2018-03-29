@@ -1,0 +1,35 @@
+.dropzone { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; 
+    height: 150px;
+    width: 150px;
+    border: 2px dashed #f16624;
+    border-radius: 5px;
+    background: white;
+    margin: 1rem;
+
+    &.hovering {
+        border: 2px solid #f16624;
+        color: #dadada !important;
+    }
+}
+
+.input {
+    position: relative;
+    width: 100%;
+
+    & > input {
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+progress::-webkit-progress-value {
+    transition: width 0.1s ease;
+}

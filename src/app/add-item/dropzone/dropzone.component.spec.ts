@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShellTabsComponent } from './shell-tabs.component';
+import { DropzoneComponent } from './dropzone.component';
 
-describe('ShellTabsComponent', () => {
-  let component: ShellTabsComponent;
-  let fixture: ComponentFixture<ShellTabsComponent>;
+describe('DropzoneComponent', () => {
+  let component: DropzoneComponent;
+  let fixture: ComponentFixture<DropzoneComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShellTabsComponent ]
+      declarations: [ DropzoneComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShellTabsComponent);
+    fixture = TestBed.createComponent(DropzoneComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

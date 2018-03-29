@@ -8,4 +8,5 @@ export interface User {
     premium?: boolean;
     fastbuy?: boolean;
     rank?: number;
+    items?: string[];
 }

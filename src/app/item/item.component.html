@@ -1,0 +1,33 @@
+<mat-card fxLayout="column" fxLayoutAlign="space-between center">
+  <mat-card-header>
+    <mat-card-title>{{ item?.name }}</mat-card-title>
+    <mat-card-subtitle>{{ item?.category }}</mat-card-subtitle>
+    <span fxFlex></span>
+    <div fxLayout="row">
+      <div fxLayout="column" fxLayoutAlign="center center" class="rank">
+        <span>{{ (owner$ | async)?.rank }} </span>
+        <img class="star" src="./assets/img/star.svg" alt="star icon">
+      </div>
+      <img class="avatar" [src]="(owner$ | async)?.photoURL" alt="owner avatar">
+    </div>
+  </mat-card-header>
+  <div mat-card-image class="photos" dragScroll scrollbar-hidden="true" drag-scroll-y-disabled="true">
+    <img *ngFor="let photo of item?.photos" [src]="photo" alt="">
+  </div>
+  <mat-card-content>
+    <p>
+      {{ item?.desc }}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <div *ngIf="item?.status === 'active'">
+      <button *ngIf="!((loggedUser$ | async)?.uid === item?.owner)" mat-raised-button color="primary">
+        BUY FOR {{ item?.price }} $</button>
+    </div>
+    <div *ngIf="item?.status === 'sold'">
+      <button mat-raised-button disabled>SOLD</button>
+    </div>
+    <button *ngIf="(loggedUser$ | async)?.uid === item?.owner" mat-raised-button color="accent">DELETE</button>
+    <button *ngIf="editOn" mat-raised-button color="primary">BUY FOR {{ item?.price }} $</button>
+  </mat-card-actions>
+</mat-card>

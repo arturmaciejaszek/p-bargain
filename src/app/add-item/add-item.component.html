@@ -1,0 +1,62 @@
+<div fxLayout="row" fxLayoutGap="20px">
+
+  <div fxLayout="column">
+    <h4>Preview:</h4>
+    <app-item [item]="itemForm.value" [photos]="photos" editOn="true"></app-item>
+  </div>
+
+  <div>
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field color="primary">
+          <input matInput 
+          placeholder="name"
+          formControlName="name"
+          autocomplete="name"
+          required>
+          <mat-error>Missing name.</mat-error>
+        </mat-form-field>
+
+        <!-- CATEGORY DROPDOWN -->
+
+        <mat-form-field>
+          <mat-select placeholder="Item Category" formControlName="category" required>
+            <mat-option *ngFor="let cat of categories" [value]="cat">
+              {{ cat }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please choose a category</mat-error>
+        </mat-form-field>
+
+        <!-- PHOTO INPUTS -->
+        <div fxLayout="row">
+          <app-dropzone (photoLinkEmitter)="addPhoto($event, 0)" [itemUID]="itemUID" fileName="0"></app-dropzone>
+          <app-dropzone (photoLinkEmitter)="addPhoto($event, 1)" [itemUID]="itemUID" fileName="1"></app-dropzone>
+          <app-dropzone (photoLinkEmitter)="addPhoto($event, 2)" [itemUID]="itemUID" fileName="2"></app-dropzone>
+        </div>
+
+        <!-- DESCRIPTION TEXT AREA -->
+
+        <mat-form-field>
+          <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2"
+                    matAutosizeMaxRows="5" formControlName="desc" required></textarea>
+        </mat-form-field>
+      
+        <mat-form-field color="primary">
+          <input matInput 
+          placeholder="price"
+          formControlName="price"
+          type="number"
+          min="1"
+          autocomplete="off"
+          required>
+          <mat-error>Price should be bigger than 0.</mat-error>
+        </mat-form-field>
+
+        <!-- CONFIRM BUTTON -->
+        <button mat-raised-button color="primary" type="submit">Add Item</button>
+
+    </form>
+  </div>
+
+</div>

@@ -17,7 +17,6 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { ShellComponent } from './shell/shell.component';
 import { AuthComponent } from './auth/auth.component';
-import { ShellTabsComponent } from './shell/shell-tabs/shell-tabs.component';
 
 
 @NgModule({

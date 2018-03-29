@@ -1,0 +1,20 @@
+<div class="dropzone" 
+    appDropZone
+    (hovered)="toggleHover($event)"
+    (dropped)="startUpload($event)"
+    [class.hovering]="isHovering">
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <mat-icon>cloud_upload</mat-icon>
+      <h4>&nbsp;Drop a photo</h4>
+    </div>
+
+    <mat-spinner *ngIf="task" diameter="30"></mat-spinner>
+
+    <div *ngIf="!task" class="input" fxLayout="column" fxLayoutAlign="center center">
+      <p *ngIf="!fileNameDisplay">Or choose a file:</p>
+      <input type="file" accept="image/*" (change)="startUpload($event.target.files[0])" #fileInput>
+      <button mat-button (click)="fileInput.click()">{{ fileNameDisplay? fileNameDisplay : 'File Upload'}}</button>
+    </div>
+
+</div>
