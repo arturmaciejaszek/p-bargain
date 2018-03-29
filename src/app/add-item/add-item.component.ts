@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 import { AuthService } from './../auth/auth.service';
 import { Item } from './../item/item.model';
@@ -19,7 +21,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
   sub: Subscription;
   photos: string[] = [];
 
-  constructor(private db: AngularFirestore, private authService: AuthService) { }
+  constructor(private db: AngularFirestore,
+    private authService: AuthService,
+    private afs: AngularFireStorage,
+    private loc: Location) { }
 
   ngOnInit() {
     this.formInit();
@@ -51,10 +56,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
       owner: this.owner
     };
 
-    // THIS SHOULD BE HANDLED BY STORE DISPATCH AS A CRUD EFFECT ACTION (or not? its the only place where create will be called)
+    // THIS SHOULD BE HANDLED BY STORE DISPATCH AS A CRUD EFFECT ACTION
 
     this.db.collection('items').doc(newItem.uid).set(newItem);
 
+  }
+
+  onCancel() {
+    this.formInit();
+    this.photos.forEach( (photo, idx) => this.afs.ref(`/items/${this.itemUID}/${idx}`).delete() );
+    this.loc.back();
   }
 
   ngOnDestroy() {

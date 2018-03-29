@@ -8,6 +8,7 @@ const routes: Routes = [
   // { path: '', component: ShellTabsComponent, canActivate: [AuthGuard]},
   { path: 'auth', component: AuthComponent},
   { path: 'profile', loadChildren: './user/user.module#UserModule', canLoad: [AuthGuard]},
+  { path: 'add', loadChildren: './add-item/add-item.module#AddItemModule', canLoad: [AuthGuard]}
 ];
 
 @NgModule({

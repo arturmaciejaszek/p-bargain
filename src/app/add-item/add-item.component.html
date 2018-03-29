@@ -6,7 +6,7 @@
   </div>
 
   <div>
-    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="itemForm">
 
         <mat-form-field color="primary">
           <input matInput 
@@ -54,7 +54,8 @@
         </mat-form-field>
 
         <!-- CONFIRM BUTTON -->
-        <button mat-raised-button color="primary" type="submit">Add Item</button>
+        <button mat-raised-button color="primary" (click)="onSubmit()">Add Item</button>
+        <button mat-raised-button color="accent" (click)="onCancel()" routerLink="../">Cancel</button>
 
     </form>
   </div>

@@ -17,7 +17,6 @@ import { ShellComponent } from './shell.component';
         SharedModule,
         AuthModule,
         AppRoutingModule,
-        AddItemModule
     ],
     exports: [
         ShellComponent

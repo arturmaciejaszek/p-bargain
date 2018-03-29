@@ -1,3 +1,4 @@
+import { AddItemRoutingModule } from './add-item-routing.module';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -16,11 +17,8 @@ import { DropzoneComponent } from './dropzone/dropzone.component';
     imports: [
         SharedModule,
         ItemModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        AddItemRoutingModule
     ],
-    exports: [
-        AddItemComponent
-    ],
-    providers: [],
 })
 export class AddItemModule { }
