@@ -7,8 +7,8 @@ export const FETCH_DATA_SUCCESS = '[Item] Fetch Data Success';
 export const CREATE_ITEM = '[Item] Create Item';
 export const UPDATE_ITEM = '[Item] Update Item';
 export const DELETE_ITEM = '[Item] Delete Item';
-export const CRUD_SUCCESS = '[Item] CRUD Success';
 
+export const CALL_SUCCESS = '[Item] Call Success';
 export const CALL_FAILURE = '[Item] Call Failure';
 
 export class FetchData implements Action {
@@ -41,8 +41,8 @@ export class FetchDataSuccess implements Action {
     constructor(public payload?: any) {}
 }
 
-export class CrudSuccess implements Action {
-    readonly type = CRUD_SUCCESS;
+export class CallSuccess implements Action {
+    readonly type = CALL_SUCCESS;
 
     constructor(public payload?: any) {}
 }
@@ -59,5 +59,5 @@ export type All
   | UpdateItem
   | DeleteItem
   | FetchDataSuccess
-  | CrudSuccess
+  | CallSuccess
   | CallFailure;

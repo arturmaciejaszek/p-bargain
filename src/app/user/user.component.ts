@@ -26,7 +26,7 @@ export class UserComponent implements OnInit, OnDestroy {
   sub: Subscription;
   townControl: FormControl;
   userItems = new MatTableDataSource<Item>();
-  displayedColumns = ['name', 'price', 'status'];
+  displayedColumns = ['name', 'price', 'status', 'action'];
 
   constructor(private authService: AuthService,
               private dialog: MatDialog,
@@ -67,6 +67,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
   getUserItems() {
     this.store.dispatch(new ItemActions.FetchData(this.user.uid));
+  }
+
+  deleteItem(item: Item) {
+    this.store.dispatch( new ItemActions.DeleteItem(item.uid));
   }
 
   ngOnDestroy() {

@@ -28,17 +28,11 @@ export function itemReducer(
         case actions.FETCH_DATA_SUCCESS:
             return itemAdapter.addAll(action.payload, state);
 
-        case actions.CREATE_ITEM:
-            return itemAdapter.addOne(action.payload, state);
+        case actions.CALL_SUCCESS:
+            return state;
 
-        case actions.UPDATE_ITEM:
-            return itemAdapter.updateOne({
-                id: action.payload.uid,
-                changes: action.payload.changes,
-            }, state);
-
-        case actions.DELETE_ITEM:
-            return itemAdapter.removeOne(action.payload, state);
+        case actions.CALL_FAILURE:
+            return state;
 
         default:
             return state;

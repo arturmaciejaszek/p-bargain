@@ -1,19 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from 'angularfire2/storage';
+import { Store } from '@ngrx/store';
 
+import * as fromItem from '../item/item.reducer';
+import * as ItemActions from '../item/item.actions';
 import { AuthService } from './../auth/auth.service';
 import { Item } from './../item/item.model';
-import { Subscription } from 'rxjs/Subscription';
-import { ItemService } from '../item/item.service';
 
 @Component({
   selector: 'app-add-item',
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.scss'],
-  providers: [ItemService]
 })
 export class AddItemComponent implements OnInit, OnDestroy {
   itemForm: FormGroup;
@@ -28,7 +29,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private afs: AngularFireStorage,
     private loc: Location,
-    private itemService: ItemService) { }
+    private store: Store<fromItem.State>) { }
 
   ngOnInit() {
     this.formInit();
@@ -63,13 +64,15 @@ export class AddItemComponent implements OnInit, OnDestroy {
       owner: this.owner
     };
 
-    this.itemService.createItem(newItem.uid, newItem)
-      .then(_ => {
-        const newItems = [...this.ownerItems, newItem.uid];
-        this.authService.updateData(this.owner, {items: newItems});
-        this.loc.back();
-      })
-      .catch( err => console.log(err));
+    this.store.dispatch( new ItemActions.CreateItem(newItem));
+
+    // this.itemService.createItem(newItem.uid, newItem)
+    //   .then(_ => {
+    //     const newItems = [...this.ownerItems, newItem.uid];
+    //     this.authService.updateData(this.owner, {items: newItems});
+    //     this.loc.back();
+    //   })
+    //   .catch( err => console.log(err));
 
   }
 

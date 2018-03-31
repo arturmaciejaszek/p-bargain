@@ -1,5 +1,7 @@
 <div fxLayout="row" class="wrapper">
-  <div class="left" fxFlex="25%">
+  <div class="left" fxFlex="50%">
+
+    <h4>Your items</h4>
 
     <mat-table #table [dataSource]="userItems">
 
@@ -17,6 +19,14 @@
         <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
       </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+        <mat-cell *matCellDef="let element"> 
+          <button *ngIf="element.status === 'active'" mat-button color="accent" (click)="deleteItem(element)">DELETE</button> 
+          <button *ngIf="element.status === 'sold'" mat-button color="primary">BARGAIN</button> 
+        </mat-cell>
+      </ng-container>
   
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -25,7 +35,7 @@
     <button mat-raised-button color="primary" routerLink="/add">Add Item</button>
   </div>
 
-  <div class="middle" fxFlex="50%">
+  <div class="middle" fxFlex="25%">
     <h3>Hello</h3>
     <h1>{{ user?.name }}</h1>
     
