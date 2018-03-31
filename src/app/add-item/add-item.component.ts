@@ -66,14 +66,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.store.dispatch( new ItemActions.CreateItem(newItem));
 
-    // this.itemService.createItem(newItem.uid, newItem)
-    //   .then(_ => {
-    //     const newItems = [...this.ownerItems, newItem.uid];
-    //     this.authService.updateData(this.owner, {items: newItems});
-    //     this.loc.back();
-    //   })
-    //   .catch( err => console.log(err));
-
   }
 
   onCancel() {
