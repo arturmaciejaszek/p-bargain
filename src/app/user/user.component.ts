@@ -66,7 +66,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   getUserItems() {
-    this.store.dispatch(new ItemActions.FetchData(this.user.items));
+    this.store.dispatch(new ItemActions.FetchData(this.user.uid));
   }
 
   ngOnDestroy() {

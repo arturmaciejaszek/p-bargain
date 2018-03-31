@@ -25,7 +25,7 @@ export class ItemEffects {
   @Effect()
   fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
       .map( (action: ItemActions.FetchData) => action.payload)
-      .switchMap( (payload: string[]) => this.runQuery(payload))
+      .switchMap( (payload: string) => this.runQuery(payload))
       .map( (res: Item[]) => {
           return new ItemActions.FetchDataSuccess(res);
         });
@@ -35,9 +35,9 @@ export class ItemEffects {
     //     this.items = this.itemsCollection.valueChanges();
     // }
 
-    runQuery(itemsUIDs: string[]) {
-        // return this.db.collection('items', ref => ref.where( ref.id, '==', itemsUIDs.includes(ref.id) )).valueChanges();
-        return this.db.collection<Item>('items').valueChanges();
+    runQuery(ownerUID: string) {
+        // return this.db.collection<Item>('items').valueChanges();
+        return this.db.collection<Item>('items', ref => ref.where('owner', '==', ownerUID)).valueChanges();
     }
 
 }
