@@ -7,30 +7,37 @@ import { AngularFireStorage } from 'angularfire2/storage';
 import { AuthService } from './../auth/auth.service';
 import { Item } from './../item/item.model';
 import { Subscription } from 'rxjs/Subscription';
+import { ItemService } from '../item/item.service';
 
 @Component({
   selector: 'app-add-item',
   templateUrl: './add-item.component.html',
-  styleUrls: ['./add-item.component.scss']
+  styleUrls: ['./add-item.component.scss'],
+  providers: [ItemService]
 })
 export class AddItemComponent implements OnInit, OnDestroy {
   itemForm: FormGroup;
   categories: string[];
   itemUID: string;
   owner: string;
+  ownerItems: string[];
   sub: Subscription;
   photos: string[] = [];
 
   constructor(private db: AngularFirestore,
     private authService: AuthService,
     private afs: AngularFireStorage,
-    private loc: Location) { }
+    private loc: Location,
+    private itemService: ItemService) { }
 
   ngOnInit() {
     this.formInit();
     this.itemUID = this.db.createId();
     this.categories = ['clothes', 'books', 'accessories', 'toys', 'crafts', 'others'];
-    this.sub = this.authService.user$.subscribe( user => this.owner = user.uid);
+    this.sub = this.authService.user$.subscribe( user => {
+      this.owner = user.uid;
+      this.ownerItems = user.items;
+    });
   }
 
   private formInit() {
@@ -56,9 +63,13 @@ export class AddItemComponent implements OnInit, OnDestroy {
       owner: this.owner
     };
 
-    // THIS SHOULD BE HANDLED BY STORE DISPATCH AS A CRUD EFFECT ACTION
-
-    this.db.collection('items').doc(newItem.uid).set(newItem);
+    this.itemService.createItem(newItem.uid, newItem)
+      .then(_ => {
+        const newItems = [...this.ownerItems, newItem.uid];
+        this.authService.updateData(this.owner, {items: newItems});
+        this.loc.back();
+      })
+      .catch( err => console.log(err));
 
   }
 

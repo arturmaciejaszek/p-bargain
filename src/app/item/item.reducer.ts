@@ -1,38 +1,43 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createFeatureSelector } from '@ngrx/store';
 
+import * as actions from './item.actions';
 import { Item } from './item.model';
-import { ItemActions, CREATE_ITEM, UPDATE_ITEM, DELETE_ITEM } from './item.actions';
 
-export const itemAdapter = createEntityAdapter<Item>();
+// Entity adapter
+export const itemAdapter = createEntityAdapter<Item>({
+    selectId: (item: Item) => item.uid
+});
 export interface State extends EntityState<Item> { }
 
-
 // Default data / initial state
-const defaultCollection = {
-    ids: ['123'],
-    entities: {
-        '123': {
-            uid: '123',
-        }
-    }
+
+const defaultState = {
+    ids: [],
+    entities: {}
 };
 
-export const initialState: State = itemAdapter.getInitialState(defaultCollection);
+export const initialState: State = itemAdapter.getInitialState(defaultState);
 
-export function itemReducer(state: State = initialState, action: ItemActions) {
+export function itemReducer(
+    state: State = initialState,
+    action: actions.All) {
 
     switch (action.type) {
-        case CREATE_ITEM:
+
+        case actions.FETCH_DATA_SUCCESS:
+            return itemAdapter.addAll(action.payload, state);
+
+        case actions.CREATE_ITEM:
             return itemAdapter.addOne(action.payload, state);
 
-        case UPDATE_ITEM:
+        case actions.UPDATE_ITEM:
             return itemAdapter.updateOne({
                 id: action.payload.uid,
                 changes: action.payload.changes,
             }, state);
 
-        case DELETE_ITEM:
+        case actions.DELETE_ITEM:
             return itemAdapter.removeOne(action.payload, state);
 
         default:

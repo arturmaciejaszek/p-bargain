@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ImageCropperComponent } from 'ng2-img-cropper';
 
 import { SharedModule } from './../shared/shared.module';
+import { ItemModule } from './../item/item.module';
 import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
 import { CropComponent } from './crop/crop.component';
@@ -16,7 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     imports: [
         SharedModule,
         UserRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        ItemModule
     ],
     exports: [],
     providers: [],

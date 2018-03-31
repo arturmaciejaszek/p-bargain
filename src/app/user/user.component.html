@@ -1,6 +1,28 @@
 <div fxLayout="row" class="wrapper">
   <div class="left" fxFlex="25%">
-      <button mat-raised-button color="primary" routerLink="/add">Add Item</button>
+
+    <mat-table #table [dataSource]="userItems">
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="price">
+        <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.price}} $ </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>    
+
+    <button mat-raised-button color="primary" routerLink="/add">Add Item</button>
   </div>
 
   <div class="middle" fxFlex="50%">
