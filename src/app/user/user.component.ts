@@ -54,6 +54,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
   }
 
+  trackByFn(index: number, item: Item) {
+    return index;
+  }
+
   uploadPhoto(event) {
     this.dialog.open(CropComponent, {data: {
       file: event.target.files[0],

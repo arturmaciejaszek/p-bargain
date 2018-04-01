@@ -3,7 +3,7 @@
 
     <h4>Your items</h4>
 
-    <mat-table #table [dataSource]="userItems">
+    <mat-table #table [dataSource]="userItems" [trackBy]="trackByFn">
 
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
