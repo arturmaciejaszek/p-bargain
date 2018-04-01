@@ -10,6 +10,7 @@ import * as fromItem from '../item/item.reducer';
 import * as ItemActions from '../item/item.actions';
 import { AuthService } from './../auth/auth.service';
 import { Item } from './../item/item.model';
+import { User } from './../auth/user.model';
 
 @Component({
   selector: 'app-add-item',
@@ -20,8 +21,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   itemForm: FormGroup;
   categories: string[];
   itemUID: string;
-  owner: string;
-  ownerItems: string[];
+  user: User;
   sub: Subscription;
   photos: string[] = [];
 
@@ -36,8 +36,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.itemUID = this.db.createId();
     this.categories = ['clothes', 'books', 'accessories', 'toys', 'crafts', 'others'];
     this.sub = this.authService.user$.subscribe( user => {
-      this.owner = user.uid;
-      this.ownerItems = user.items;
+      this.user = user;
     });
   }
 
@@ -61,7 +60,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       posted: new Date(),
       status: 'active',
       photos: this.photos,
-      owner: this.owner
+      owner: this.user.uid,
+      town: this.user.town
     };
 
     this.store.dispatch( new ItemActions.CreateItem(newItem));

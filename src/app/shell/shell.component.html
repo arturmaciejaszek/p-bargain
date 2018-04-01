@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column">
   <mat-toolbar color="primary" role="header" class="mat-elevation-z8" fxFlexLayoutAlign="space-between center">    
-    <span class="logo" routerLink="/">Bargain</span>
+    <span class="logo" routerLink="/shop">Bargain</span>
 
     <span fxFlex></span>
 
@@ -15,8 +15,8 @@
         <img [src]="user?.photoURL" alt="Avatar" class="avatar">
       </button>
       <mat-menu #userMenu="matMenu" overlapTrigger="false">
+        <button mat-menu-item routerLink="/shop">Shop</button>
         <button mat-menu-item >Bargains</button>
-        <button mat-menu-item >Saved</button>
         <button mat-menu-item routerLink="/profile" >Profile</button>
         <button mat-menu-item (click)="onLogout()">Logout</button>
       </mat-menu>

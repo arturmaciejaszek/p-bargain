@@ -8,6 +8,7 @@ export interface Item {
     price: string;
     posted: Date;
     status: string;
+    town: string;
     buyer?: string;
     sold?: Date;
 }

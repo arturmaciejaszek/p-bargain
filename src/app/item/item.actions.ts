@@ -33,7 +33,7 @@ export class UpdateItem implements Action {
 export class DeleteItem implements Action {
     readonly type = DELETE_ITEM;
 
-    constructor(public payload: string) {}
+    constructor(public payload: Item) {}
 }
 
 export class FetchDataSuccess implements Action {

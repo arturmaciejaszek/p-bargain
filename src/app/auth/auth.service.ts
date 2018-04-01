@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -17,7 +18,8 @@ export class AuthService {
 
     constructor(private af: AngularFireAuth,
         private db: AngularFirestore,
-        private store: Store<fromRoot.State>) {
+        private store: Store<fromRoot.State>,
+        private router: Router) {
 
             this.user$ = this.af.authState.switchMap( user => {
                 if (user) {
@@ -37,6 +39,7 @@ export class AuthService {
             .then( user => {
                 this.setData(user, name);
                 this.store.dispatch(new StopLoading());
+                this.router.navigate(['/profile']);
             })
             .catch( err => {
                 console.log(err);
@@ -47,7 +50,10 @@ export class AuthService {
     login(authData: AuthData) {
         this.store.dispatch(new StartLoading());
         this.af.auth.signInWithEmailAndPassword(authData.email, authData.password)
-            .then( user => this.store.dispatch(new StopLoading()))
+            .then( user => {
+                this.store.dispatch(new StopLoading());
+                this.router.navigate(['/shop']);
+            })
             .catch( err => {
                 console.log(err);
                 this.store.dispatch(new StopLoading());

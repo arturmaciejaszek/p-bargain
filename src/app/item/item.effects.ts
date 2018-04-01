@@ -36,7 +36,7 @@ export class ItemEffects {
     @Effect()
     deleteItem: Observable<Action> = this.actions.ofType(ItemActions.DELETE_ITEM)
         .map( (action: ItemActions.DeleteItem) => action.payload )
-        .mergeMap( (uid: string) => of(this.db.collection('items').doc(`${uid}`).delete()) )
+        .mergeMap( (item: Item) => of(this.batchDelete(item)) )
         .map( res => {
             return new ItemActions.CallSuccess();
         })
@@ -47,19 +47,19 @@ export class ItemEffects {
     @Effect()
     createItem: Observable<Action> = this.actions.ofType(ItemActions.CREATE_ITEM)
         .map( (action: ItemActions.CreateItem) => action.payload )
-        .mergeMap( (item: Item) => of(this.db.collection('items').doc(`${item.uid}`).set(item)) )
+        .mergeMap( (item: Item) => of(this.batchCreate(item)) )
         .map( res => {
             res.then( resolve => this.loc.back());
             return new ItemActions.CallSuccess();
         })
         .catch( err => {
-           return of( new ItemActions.CallFailure());
+            return of( new ItemActions.CallFailure());
         });
 
     @Effect()
     updateItem: Observable<Action> = this.actions.ofType(ItemActions.UPDATE_ITEM)
         .map( (action: ItemActions.UpdateItem) => action.payload )
-        .mergeMap( (data: {uid: string, changes: Partial<Item>}) => of(this.db.collection('items').doc(data.uid).update(data.changes)))
+        .mergeMap( (data: {uid: string, changes: Partial<Item>}) => of(this.batchUpdate(data)))
         .map( res => {
             res.then( resolve => this.loc.back());
             return new ItemActions.CallSuccess();
@@ -70,14 +70,51 @@ export class ItemEffects {
 
     runQuery(query: ItemQuery) {
         if (query.ownerUID) {
-            return this.db.collection<Item>('items', ref => ref.where('owner', '==', query.ownerUID)).valueChanges();
+            return this.db.collection('users').doc(`${query.ownerUID}`).collection('items').valueChanges();
         } else {
-            return this.db.collection<Item>('items', ref => ref.where('town', '==', query.town)
-                                                                .where('category', '==', query.category)
-                                                                .where('price', '>=', query.price.minPrice)
-                                                                .where('price', '<=', query.price.maxPrice)
+            return this.db.collection('items').doc('towns')
+                .collection(`${query.town}`, docRef => docRef.where('category', '==', query.category)
+                                                            .where('price', '>=', query.price.minPrice)
+                                                            .where('price', '<=', query.price.maxPrice)
             ).valueChanges();
         }
+    }
+
+    // Atomic
+    batchCreate(item: Item) {
+        const createBatch = this.db.firestore.batch();
+
+        const userItemsRef = this.db.doc(`users/${item.owner}/items/${item.uid}`).ref;
+        const townItemRef = this.db.doc(`items/towns/${item.town}/${item.uid}`).ref;
+
+        createBatch.set(userItemsRef, item);
+        createBatch.set(townItemRef, item);
+
+        return createBatch.commit();
+    }
+
+    batchDelete(item: Item) {
+        const createBatch = this.db.firestore.batch();
+
+        const userItemsRef = this.db.doc(`users/${item.owner}/items/${item.uid}`).ref;
+        const townItemRef = this.db.doc(`items/towns/${item.town}/${item.uid}`).ref;
+
+        createBatch.delete(userItemsRef);
+        createBatch.delete(townItemRef);
+
+        return createBatch.commit();
+    }
+
+    batchUpdate(data: {uid: string, changes: Partial<Item>}) {
+        const createBatch = this.db.firestore.batch();
+
+        const userItemsRef = this.db.doc(`users/${data.changes.owner}/items/${data.uid}`).ref;
+        const townItemRef = this.db.doc(`items/towns/${data.changes.town}/${data.uid}`).ref;
+
+        createBatch.update(userItemsRef, data);
+        createBatch.update(townItemRef, data);
+
+        return createBatch.commit();
     }
 
 }

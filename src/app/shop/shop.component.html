@@ -1,3 +1,42 @@
-<p>
-  shop works!
-</p>
+<mat-form-field fxFlexAlign="end">
+  <input matInput 
+  placeholder="Town" 
+  #townInput 
+  [formControl]="townControl" 
+  [value]="selectedTown" >
+</mat-form-field>
+
+<mat-form-field>
+  <mat-select placeholder="Category" (change)="switchCategory($event)">
+    <mat-option *ngFor="let cat of categories" [value]="cat">
+      {{ cat }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div>
+  <p>Min Price: </p> 
+  <mat-slider 
+  min="1" 
+  max="1000" 
+  step="1" 
+  value="0" 
+  thumbLabel="true" 
+  color="primary" 
+  #min
+  (change)="switchMinPrice($event)"></mat-slider>
+  {{ min.value !== 0? min.value : null }}
+</div>
+<div>
+  <p>Max Price: </p>  
+  <mat-slider 
+  min="1" 
+  max="3000" 
+  step="1" 
+  value="0" 
+  thumbLabel="true" 
+  color="primary" 
+  #max
+  (change)="switchMaxPrice($event)"></mat-slider>
+  {{ max.value !== 0? max.value : null }}
+</div>

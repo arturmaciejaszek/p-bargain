@@ -77,7 +77,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().pipe(take(1)).subscribe( res => {
       if (res) {
-        this.store.dispatch( new ItemActions.DeleteItem(item.uid));
+        this.store.dispatch( new ItemActions.DeleteItem(item));
       }
     });
   }
