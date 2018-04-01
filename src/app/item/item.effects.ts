@@ -44,7 +44,7 @@ export class ItemEffects {
     @Effect()
     createItem: Observable<Action> = this.actions.ofType(ItemActions.CREATE_ITEM)
         .map( (action: ItemActions.CreateItem) => action.payload )
-        .mergeMap( (item: Item) => of(this.db.collection('items').add(item)) )
+        .mergeMap( (item: Item) => of(this.db.collection('items').doc(`${item.uid}`).set(item)) )
         .map( res => {
             res.then( resolve => this.loc.back());
             return new ItemActions.CallSuccess();

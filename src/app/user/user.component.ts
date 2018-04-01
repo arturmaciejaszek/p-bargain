@@ -1,15 +1,15 @@
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatDialog, MatTableDataSource } from '@angular/material';
-import { Subject } from 'rxjs/Subject';
+import { take } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
-import { AngularFirestore } from 'angularfire2/firestore';
 import {} from '@types/googlemaps';
 
 import * as fromItem from '../item/item.reducer';
 import * as ItemActions from '../item/item.actions';
 
+import { PromptComponent } from './../shared/prompt/prompt.component';
 import { CropComponent } from './crop/crop.component';
 import { AuthService } from '../auth/auth.service';
 import { User } from './../auth/user.model';
@@ -29,9 +29,8 @@ export class UserComponent implements OnInit, OnDestroy {
   displayedColumns = ['name', 'price', 'action'];
 
   constructor(private authService: AuthService,
-              private dialog: MatDialog,
-              private db: AngularFirestore,
-              private store: Store<fromItem.State>) { }
+              private store: Store<fromItem.State>,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.authService.user$.subscribe( (user: User) => {
@@ -74,7 +73,13 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   deleteItem(item: Item) {
-    this.store.dispatch( new ItemActions.DeleteItem(item.uid));
+    const dialogRef = this.dialog.open(PromptComponent);
+
+    dialogRef.afterClosed().pipe(take(1)).subscribe( res => {
+      if (res) {
+        this.store.dispatch( new ItemActions.DeleteItem(item.uid));
+      }
+    });
   }
 
   ngOnDestroy() {
