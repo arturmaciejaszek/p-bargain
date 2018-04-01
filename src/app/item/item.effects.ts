@@ -12,11 +12,14 @@ import 'rxjs/add/operator/catch';
 
 import { Item } from './item.model';
 import * as ItemActions from './item.actions';
+import { ItemQuery } from './item-query.model';
+import { Query } from '@firebase/firestore-types';
 export type Action = ItemActions.All;
 
 
 @Injectable()
 export class ItemEffects {
+
 
   constructor(private actions: Actions, private db: AngularFirestore, private loc: Location) {
 
@@ -25,7 +28,7 @@ export class ItemEffects {
     @Effect()
     fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
         .map( (action: ItemActions.FetchData) => action.payload)
-        .switchMap( (payload: string) => this.runQuery(payload))
+        .switchMap( (payload: ItemQuery) => this.runQuery(payload))
         .map( (res: Item[]) => {
             return new ItemActions.FetchDataSuccess(res);
         });
@@ -65,9 +68,16 @@ export class ItemEffects {
            return of( new ItemActions.CallFailure());
         });
 
-
-    runQuery(ownerUID: string) {
-        return this.db.collection<Item>('items', ref => ref.where('owner', '==', ownerUID)).valueChanges();
+    runQuery(query: ItemQuery) {
+        if (query.ownerUID) {
+            return this.db.collection<Item>('items', ref => ref.where('owner', '==', query.ownerUID)).valueChanges();
+        } else {
+            return this.db.collection<Item>('items', ref => ref.where('town', '==', query.town)
+                                                                .where('category', '==', query.category)
+                                                                .where('price', '>=', query.price.minPrice)
+                                                                .where('price', '<=', query.price.maxPrice)
+            ).valueChanges();
+        }
     }
 
 }

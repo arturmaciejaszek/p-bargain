@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Item } from './item.model';
+import { ItemQuery } from './item-query.model';
 
 export const FETCH_DATA = '[Item] Fetch Data';
 export const FETCH_DATA_SUCCESS = '[Item] Fetch Data Success';
@@ -14,7 +15,7 @@ export const CALL_FAILURE = '[Item] Call Failure';
 export class FetchData implements Action {
     readonly type = FETCH_DATA;
 
-    constructor(public payload: any) {}
+    constructor(public payload: ItemQuery) {}
 }
 
 export class CreateItem implements Action {

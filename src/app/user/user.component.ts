@@ -69,7 +69,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   getUserItems() {
-    this.store.dispatch(new ItemActions.FetchData(this.user.uid));
+    this.store.dispatch(new ItemActions.FetchData({ownerUID: this.user.uid}));
   }
 
   deleteItem(item: Item) {
