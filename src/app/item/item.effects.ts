@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Effect, Actions } from '@ngrx/effects';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import * as firebase from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
@@ -13,7 +14,6 @@ import 'rxjs/add/operator/catch';
 import { Item } from './item.model';
 import * as ItemActions from './item.actions';
 import { ItemQuery } from './item-query.model';
-import { Query } from '@firebase/firestore-types';
 export type Action = ItemActions.All;
 
 
@@ -68,21 +68,9 @@ export class ItemEffects {
            return of( new ItemActions.CallFailure());
         });
 
-    runQuery(query: ItemQuery) {
-        if (query.ownerUID) {
-            return this.db.collection('users').doc(`${query.ownerUID}`).collection('items').valueChanges();
-        } else {
-            return this.db.collection('items').doc('towns')
-                .collection(`${query.town}`, docRef => docRef.where('category', '==', query.category)
-                                                            .where('price', '>=', query.price.minPrice)
-                                                            .where('price', '<=', query.price.maxPrice)
-            ).valueChanges();
-        }
-    }
-
-    // Atomic
-    batchCreate(item: Item) {
-        const createBatch = this.db.firestore.batch();
+        // Atomic
+        batchCreate(item: Item) {
+            const createBatch = this.db.firestore.batch();
 
         const userItemsRef = this.db.doc(`users/${item.owner}/items/${item.uid}`).ref;
         const townItemRef = this.db.doc(`items/towns/${item.town}/${item.uid}`).ref;
@@ -115,6 +103,20 @@ export class ItemEffects {
         createBatch.update(townItemRef, data);
 
         return createBatch.commit();
+    }
+
+    runQuery(query: ItemQuery) {
+        if (query.ownerUID) {
+            return this.db.collection('users').doc(`${query.ownerUID}`).collection('items').valueChanges();
+        } else {
+            return this.db.collection(`items/towns/${query.town}`, ref => {
+                let q: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+                    if (query.category) { q = q.where('category', '==', query.category); }
+                    if (query.price.minPrice) { q = q.where('price', '>=', query.price.minPrice); }
+                    if (query.price.maxPrice) { q = q.where('price', '<=', query.price.maxPrice); }
+                return q;
+        }).valueChanges();
+        }
     }
 
 }
