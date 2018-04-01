@@ -24,6 +24,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   user: User;
   sub: Subscription;
   photos: string[] = [];
+  loading = false;
 
   constructor(private db: AngularFirestore,
     private authService: AuthService,
@@ -66,6 +67,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     this.store.dispatch( new ItemActions.CreateItem(newItem));
 
+    this.loading = true;
   }
 
   onCancel() {

@@ -54,8 +54,11 @@
         </mat-form-field>
 
         <!-- CONFIRM BUTTON -->
-        <button mat-raised-button color="primary" (click)="onSubmit()">Add Item</button>
-        <button mat-raised-button color="accent" (click)="onCancel()" routerLink="../">Cancel</button>
+        <mat-spinner *ngIf="loading" diameter="40"></mat-spinner>
+        <div *ngIf="!loading">
+          <button mat-raised-button color="primary" (click)="onSubmit()">Add Item</button>
+          <button mat-raised-button color="accent" (click)="onCancel()" routerLink="../">Cancel</button>
+        </div>
 
     </form>
   </div>
