@@ -1,6 +1,7 @@
 import { AddItemRoutingModule } from './add-item-routing.module';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Ng2ImgMaxModule } from 'ng2-img-max';
 
 import { ItemModule } from './../item/item.module';
 import { AddItemComponent } from './add-item.component';
@@ -18,7 +19,8 @@ import { DropzoneComponent } from './dropzone/dropzone.component';
         SharedModule,
         ItemModule,
         ReactiveFormsModule,
-        AddItemRoutingModule
+        AddItemRoutingModule,
+        Ng2ImgMaxModule
     ],
 })
 export class AddItemModule { }

@@ -33,6 +33,7 @@
     "firebase": "^4.12.0",
     "hammerjs": "^2.0.8",
     "ng2-img-cropper": "^0.9.0",
+    "ng2-img-max": "^2.1.15",
     "ngx-drag-scroll": "^1.7.6",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"

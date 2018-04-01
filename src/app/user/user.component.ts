@@ -26,7 +26,7 @@ export class UserComponent implements OnInit, OnDestroy {
   sub: Subscription;
   townControl: FormControl;
   userItems = new MatTableDataSource<Item>();
-  displayedColumns = ['name', 'price', 'status', 'action'];
+  displayedColumns = ['name', 'price', 'action'];
 
   constructor(private authService: AuthService,
               private dialog: MatDialog,

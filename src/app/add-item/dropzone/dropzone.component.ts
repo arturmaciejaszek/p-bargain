@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage';
+import { Ng2ImgMaxService } from 'ng2-img-max';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dropzone',
@@ -16,7 +18,7 @@ export class DropzoneComponent implements OnInit {
   isHovering: boolean;
   task: AngularFireUploadTask;
 
-  constructor(private afs: AngularFireStorage, private db: AngularFirestore) { }
+  constructor(private afs: AngularFireStorage, private db: AngularFirestore, private resizer: Ng2ImgMaxService) { }
 
   ngOnInit() {
   }
@@ -31,15 +33,23 @@ export class DropzoneComponent implements OnInit {
 
     const path = `items/${this.itemUID}/${this.fileName}`;
 
-    this.task = this.afs.upload(path, file);
+    this.resize(file).pipe(take(1)).subscribe( blob => {
 
-    this.task
-      .then( res => {
-        this.photoLinkEmitter.emit(res.downloadURL);
-        this.task = null;
-      })
+      this.task = this.afs.upload(path, blob);
+
+      this.task
+        .then( res => {
+          this.photoLinkEmitter.emit(res.downloadURL);
+          this.task = null;
+        })
       .catch( err => console.log(err));
 
+    });
+
+  }
+
+  resize(file) {
+    return this.resizer.resizeImage(file, 430, 430);
   }
 
 }
