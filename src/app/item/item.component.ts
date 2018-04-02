@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, OnChanges } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/observable';
 import { Subscription } from 'rxjs/Subscription';
+import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 
 
 import { AuthService } from './../auth/auth.service';
@@ -20,6 +21,7 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
   owner$: Observable<User>;
   loggedUser$: Observable<User>;
   sub: Subscription;
+  swiperConfig: SwiperConfigInterface;
 
   constructor(private db: AngularFirestore, private as: AuthService) { }
 
@@ -34,6 +36,13 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       this.owner$ = this.as.user$;
     }
+
+    this.swiperConfig = {
+      slidesPerView: 1,
+      keyboard: true,
+      mousewheel: true,
+      scrollbar: true,
+    };
 
   }
 

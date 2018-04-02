@@ -11,9 +11,9 @@
       <img class="avatar" [src]="(owner$ | async)?.photoURL" alt="owner avatar">
     </div>
   </mat-card-header>
-  <div mat-card-image class="photos" dragScroll scrollbar-hidden="true" drag-scroll-y-disabled="true">
+  <swiper class="photos" [config]="swiperConfig">
     <img *ngFor="let photo of item?.photos" [src]="photo" alt="">
-  </div>
+  </swiper>
   <mat-card-content>
     <p>
       {{ item?.desc }}

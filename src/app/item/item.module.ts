@@ -1,6 +1,6 @@
 import { StoreModule } from '@ngrx/store';
 import { NgModule } from '@angular/core';
-import { DragScrollModule } from 'ngx-drag-scroll';
+import { SwiperModule } from 'ngx-swiper-wrapper';
 
 import { SharedModule } from './../shared/shared.module';
 import { ItemComponent } from './item.component';
@@ -14,7 +14,7 @@ import { itemReducer } from './item.reducer';
     ],
     imports: [
         SharedModule,
-        DragScrollModule,
+        SwiperModule,
         EffectsModule.forFeature([ItemEffects]),
         StoreModule.forFeature('item', itemReducer)
     ],
