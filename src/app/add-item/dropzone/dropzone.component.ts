@@ -48,8 +48,9 @@ export class DropzoneComponent implements OnInit {
 
   }
 
+  // 10000 is keeping ratio
   resize(file) {
-    return this.resizer.resizeImage(file, 430, 430);
+    return this.resizer.resizeImage(file, 10000, 500);
   }
 
 }

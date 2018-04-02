@@ -53,7 +53,7 @@ export class CropComponent implements OnInit {
   }
 
   upload() {
-    const filePath = `/${this.passedData.uid}/thumb.jpg`;
+    const filePath = `/users/${this.passedData.uid}/thumb.jpg`;
     const img = this.convertToBlob(this.data.image);
     const task = this.afs.upload(filePath, img);
     this.uploadPercent = task.percentageChanges();

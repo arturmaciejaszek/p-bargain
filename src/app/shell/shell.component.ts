@@ -30,7 +30,7 @@ export class ShellComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.user$.subscribe(user => {
       if (user) {
         this.user = user;
-        this.photoURL$ = this.afs.ref(`/${this.user.uid}/thumb.jpg`).getDownloadURL();
+        this.photoURL$ = this.afs.ref(`/users/${this.user.uid}/thumb.jpg`).getDownloadURL();
       } else {
         this.router.navigate(['/auth']);
       }
