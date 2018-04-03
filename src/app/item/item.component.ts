@@ -27,10 +27,10 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit() {
     this.loggedUser$ = this.as.user$;
-    if (this.item !== undefined) {
+    if (this.item.owner) {
       this.sub = this.db.doc<Item>(`items/towns/${this.item.town}/${this.item.uid}`).valueChanges()
         .subscribe( (item: Item) => {
-        this.item = item ;
+        this.item = item;
         this.owner$ = this.db.collection('users').doc<User>(this.item.owner).valueChanges();
       });
     } else {
