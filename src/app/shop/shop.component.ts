@@ -1,59 +1,58 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/observable';
 import { Store } from '@ngrx/store';
 
+import { Item } from './../item/item.model';
+import { IgnoredItem } from './../item/ignored-item.model';
 import * as fromItem from '../item/item.reducer';
-import * as ItemActions from '../item/item.actions';
-import { ItemQuery } from './../item/item-query.model';
 
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.scss']
 })
-export class ShopComponent implements OnInit {
-  @ViewChild('townInput') townInput: ElementRef;
-  townControl: FormControl;
-  selectedTown = '';
-  categories: string[];
-  query: ItemQuery = { price: {} };
+export class ShopComponent implements OnInit, OnDestroy {
+  data$: Observable<Item[]>;
+  // IGNORED LIST WILL BE A COLLECTION SO IT DOESNT GET FETCHED EVERY TIME
+  ignoredList: IgnoredItem[] = [];
 
   constructor(private store: Store<fromItem.State>) { }
 
   ngOnInit() {
 
-    this.townControl = new FormControl();
-
-    const autocomplete = new google.maps.places.Autocomplete(this.townInput.nativeElement, {types: ['(cities)'] });
-
-    autocomplete.addListener('place_changed', () => {
-      const town = autocomplete.getPlace();
-      this.selectedTown = town.address_components[0].short_name + ', ' + town.address_components[3].short_name;
-      this.query.town = this.selectedTown;
-      this.fetchItems();
-    });
-
-    this.categories = ['clothes', 'books', 'accessories', 'toys', 'crafts', 'others'];
+    this.filterData();
 
   }
 
-  switchCategory(event) {
-    this.query.category = event.value;
-    this.fetchItems();
+  filterData() {
+
+    // FIND A WAY TO RETRIGGER IT
+
+    this.data$ = this.store.select( fromItem.selectAll )
+              .map( array => {
+                const newArray: Item[] = [];
+                array.forEach( item => {
+                  const check: IgnoredItem = {uid: item.uid, posted: item.posted};
+                  if (!this.ignoredList.includes(check)) {
+                    newArray.push(item);
+                  }
+                });
+                return newArray;
+              });
+
   }
 
-  switchMinPrice(event) {
-    this.query.price.minPrice = event.value;
-    this.fetchItems();
+  ignore(item: Item) {
+    const ignoreItemData: IgnoredItem = {
+      uid: item.uid,
+      posted: item.posted
+    };
+    this.ignoredList.push(ignoreItemData);
+
   }
 
-  switchMaxPrice(event) {
-    this.query.price.maxPrice = event.value;
-    this.fetchItems();
-  }
-
-  fetchItems() {
-    this.store.dispatch( new ItemActions.FetchData(this.query));
+  ngOnDestroy() {
+    // update user preferences upon destoying component
   }
 
 }

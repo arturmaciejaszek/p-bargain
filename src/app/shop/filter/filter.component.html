@@ -1,0 +1,46 @@
+<div fxLayout="column">
+  <h3>Filter by</h3>
+
+  <mat-form-field fxFlexAlign="end">
+    <input matInput 
+    placeholder="Town" 
+    #townInput 
+    [formControl]="townControl" 
+    [value]="selectedTown" >
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Category" (change)="switchCategory($event)">
+      <mat-option value="">---</mat-option>
+      <mat-option *ngFor="let cat of categories" [value]="cat">
+        {{ cat }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- <div class="sliderWrapper">
+    <p>Min Price: {{ min.value !== 0? min.value : null }}</p> 
+    <mat-slider fxFill
+    min="1" 
+    max="1000" 
+    step="1" 
+    value="0" 
+    thumbLabel="true" 
+    color="primary" 
+    #min
+    (change)="switchMinPrice($event)"></mat-slider>
+  </div>
+  <div class="sliderWrapper">
+    <p>Max Price: {{ max.value !== 0? max.value : null }} </p>  
+    <mat-slider fxFill
+    min="1" 
+    max="3000" 
+    step="1" 
+    value="0" 
+    thumbLabel="true" 
+    color="primary" 
+    #max
+    (change)="switchMaxPrice($event)"></mat-slider>
+  </div> -->
+</div>
+  

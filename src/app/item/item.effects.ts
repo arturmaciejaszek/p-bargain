@@ -68,7 +68,7 @@ export class ItemEffects {
            return of( new ItemActions.CallFailure());
         });
 
-    // Atomic
+
     batchCreate(item: Item) {
         const createBatch = this.db.firestore.batch();
 
@@ -113,8 +113,8 @@ export class ItemEffects {
                 let q: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
                     q = q.where('status', '==', 'active');
                     if (query.category) { q = q.where('category', '==', query.category); }
-                    if (query.price.minPrice) { q = q.where('price', '>=', query.price.minPrice); }
-                    if (query.price.maxPrice) { q = q.where('price', '<=', query.price.maxPrice); }
+                    // if (query.price.minPrice) { q = q.where('price', '>=', query.price.minPrice); }
+                    // if (query.price.maxPrice) { q = q.where('price', '<=', query.price.maxPrice); }
                 return q;
         }).valueChanges();
         }

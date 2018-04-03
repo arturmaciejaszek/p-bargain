@@ -20,18 +20,18 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
   @Input() editOn: boolean;
   owner$: Observable<User>;
   loggedUser$: Observable<User>;
-  sub: Subscription;
   swiperConfig: SwiperConfigInterface;
+  sub: Subscription;
 
   constructor(private db: AngularFirestore, private as: AuthService) { }
 
   ngOnInit() {
     this.loggedUser$ = this.as.user$;
-    if (this.item.uid) {
-      this.sub = this.db.collection('items').doc<Item>(this.item.uid).valueChanges()
+    if (this.item !== undefined) {
+      this.sub = this.db.doc<Item>(`items/towns/${this.item.town}/${this.item.uid}`).valueChanges()
         .subscribe( (item: Item) => {
         this.item = item ;
-        this.owner$ = this.db.collection('users').doc<User>(item.owner).valueChanges();
+        this.owner$ = this.db.collection('users').doc<User>(this.item.owner).valueChanges();
       });
     } else {
       this.owner$ = this.as.user$;

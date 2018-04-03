@@ -1,6 +1,7 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createFeatureSelector } from '@ngrx/store';
 
+import * as fromRoot from '../app.reducer';
 import * as actions from './item.actions';
 import { Item } from './item.model';
 
@@ -8,19 +9,23 @@ import { Item } from './item.model';
 export const itemAdapter = createEntityAdapter<Item>({
     selectId: (item: Item) => item.uid
 });
-export interface State extends EntityState<Item> { }
+export interface ItemState extends EntityState<Item> { }
+
+export interface State extends fromRoot.State {
+    item: ItemState;
+}
 
 // Default data / initial state
 
-const defaultState = {
+const defaultState: ItemState = {
     ids: [],
-    entities: {}
+     entities: {}
 };
 
-export const initialState: State = itemAdapter.getInitialState(defaultState);
+export const initialState: ItemState = itemAdapter.getInitialState(defaultState);
 
 export function itemReducer(
-    state: State = initialState,
+    state: ItemState = initialState,
     action: actions.All) {
 
     switch (action.type) {
@@ -40,7 +45,7 @@ export function itemReducer(
 
 }
 
-export const getItemState = createFeatureSelector<State>('item');
+export const getItemState = createFeatureSelector<ItemState>('item');
 
 export const {
     selectIds,

@@ -4,8 +4,8 @@ export interface Item {
     name: string;
     category: string;
     desc: string;
-    photos: string[];
     price: string;
+    photos: string[];
     posted: Date;
     status: string;
     town: string;

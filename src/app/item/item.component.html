@@ -8,7 +8,7 @@
         <span>{{ (owner$ | async)?.rank }} </span>
         <img class="star" src="./assets/img/star.svg" alt="star icon">
       </div>
-      <img class="avatar" [src]="(owner$ | async)?.photoURL" alt="owner avatar">
+      <img class="avatar" [src]="(owner$ | async)?.photoURL" alt="">
     </div>
   </mat-card-header>
   <swiper class="photos" [config]="swiperConfig">

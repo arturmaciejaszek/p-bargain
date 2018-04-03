@@ -5,16 +5,18 @@ import { ShopComponent } from './shop.component';
 import { SharedModule } from '../shared/shared.module';
 import { ShopRoutingModule } from './shop-routing.module';
 import { ItemModule } from './../item/item.module';
+import { FilterComponent } from './filter/filter.component';
 
 @NgModule({
     declarations: [
-        ShopComponent
+        ShopComponent,
+        FilterComponent
     ],
     imports: [
         SharedModule,
         ItemModule,
         ShopRoutingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
     exports: [],
     providers: [],

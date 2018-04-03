@@ -1,3 +1,5 @@
+import { IgnoredItem } from './../item/ignored-item.model';
+
 export interface User {
     uid: string;
     name: string;
@@ -8,4 +10,5 @@ export interface User {
     premium?: boolean;
     fastbuy?: boolean;
     rank?: number;
+    ignored?: IgnoredItem[];
 }
