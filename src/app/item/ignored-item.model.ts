@@ -1,4 +1,4 @@
 export interface IgnoredItem {
     uid: string;
-    posted: Date;
+    posted: number;
 }

@@ -1,10 +1,16 @@
+import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/observable';
 import { Store } from '@ngrx/store';
+import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
+import { AuthService } from './../auth/auth.service';
 import { Item } from './../item/item.model';
+import { User } from 'firebase';
 import { IgnoredItem } from './../item/ignored-item.model';
 import * as fromItem from '../item/item.reducer';
+import * as ItemActions from '../item/item.actions';
 
 @Component({
   selector: 'app-shop',
@@ -13,46 +19,37 @@ import * as fromItem from '../item/item.reducer';
 })
 export class ShopComponent implements OnInit, OnDestroy {
   data$: Observable<Item[]>;
-  // IGNORED LIST WILL BE A COLLECTION SO IT DOESNT GET FETCHED EVERY TIME
-  ignoredList: IgnoredItem[] = [];
+  ignoredList: string[] = [];
+  userUID: string;
+  sub: Subscription[] = [];
 
-  constructor(private store: Store<fromItem.State>) { }
+  constructor(private store: Store<fromItem.State>,
+              private as: AuthService,
+              private db: AngularFirestore) { }
 
   ngOnInit() {
+    this.sub.push(this.as.user$.pipe(take(1)).subscribe( user => {
+      this.userUID = user.uid;
+    }));
 
-    this.filterData();
+    // this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
+    //   .valueChanges().subscribe( (list: {list: IgnoredItem[]}) => this.ignoredList = list.list));
 
-  }
-
-  filterData() {
-
-    // FIND A WAY TO RETRIGGER IT
-
-    this.data$ = this.store.select( fromItem.selectAll )
-              .map( array => {
-                const newArray: Item[] = [];
-                array.forEach( item => {
-                  const check: IgnoredItem = {uid: item.uid, posted: item.posted};
-                  if (!this.ignoredList.includes(check)) {
-                    newArray.push(item);
-                  }
-                });
-                return newArray;
-              });
-
+    this.data$ = this.store.select( fromItem.selectAll );
   }
 
   ignore(item: Item) {
     const ignoreItemData: IgnoredItem = {
       uid: item.uid,
-      posted: item.posted
+      posted: +item.posted
     };
-    this.ignoredList.push(ignoreItemData);
-
+    this.ignoredList.push(JSON.stringify(ignoreItemData));
+    this.store.dispatch(new ItemActions.IgnoreItem(item));
+    // this.db.doc(`users/${this.userUID}`).collection('ignored').doc('list').set({list: this.ignoredList});
   }
 
   ngOnDestroy() {
-    // update user preferences upon destoying component
+    this.sub.forEach( sub => sub.unsubscribe());
   }
 
 }

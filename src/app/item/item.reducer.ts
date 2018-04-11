@@ -1,5 +1,5 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import * as fromRoot from '../app.reducer';
 import * as actions from './item.actions';
@@ -33,6 +33,9 @@ export function itemReducer(
         case actions.FETCH_DATA_SUCCESS:
             return itemAdapter.addAll(action.payload, state);
 
+        case actions.IGNORE_ITEM:
+            return itemAdapter.removeOne(action.payload.uid, state);
+
         case actions.CALL_SUCCESS:
             return state;
 
@@ -53,3 +56,6 @@ export const {
     selectAll,
     selectTotal,
   } = itemAdapter.getSelectors(getItemState);
+
+export const getIsLoading = (state: State) => state.ui.isLoading;
+

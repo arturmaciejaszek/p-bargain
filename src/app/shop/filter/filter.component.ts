@@ -18,7 +18,7 @@ export class FilterComponent implements OnInit {
   townControl: FormControl;
   selectedTown = '';
   categories: string[];
-  query: ItemQuery = { price: {} };
+  query: ItemQuery = {};
 
   constructor(private store: Store<fromItem.State>, private as: AuthService) { }
 
@@ -47,16 +47,6 @@ export class FilterComponent implements OnInit {
     this.query.category = event.value;
     this.fetchItems();
   }
-
-  // switchMinPrice(event) {
-  //   this.query.price.minPrice = event.value;
-  //   this.fetchItems();
-  // }
-
-  // switchMaxPrice(event) {
-  //   this.query.price.maxPrice = event.value;
-  //   this.fetchItems();
-  // }
 
   fetchItems() {
     this.store.dispatch( new ItemActions.FetchData(this.query));

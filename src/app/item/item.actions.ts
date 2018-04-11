@@ -9,6 +9,8 @@ export const CREATE_ITEM = '[Item] Create Item';
 export const UPDATE_ITEM = '[Item] Update Item';
 export const DELETE_ITEM = '[Item] Delete Item';
 
+export const IGNORE_ITEM = '[Item] Ignore Item';
+
 export const CALL_SUCCESS = '[Item] Call Success';
 export const CALL_FAILURE = '[Item] Call Failure';
 
@@ -36,10 +38,16 @@ export class DeleteItem implements Action {
     constructor(public payload: Item) {}
 }
 
+export class IgnoreItem implements Action {
+    readonly type = IGNORE_ITEM;
+
+    constructor(public payload: Item) {}
+}
+
 export class FetchDataSuccess implements Action {
     readonly type = FETCH_DATA_SUCCESS;
 
-    constructor(public payload?: any) {}
+    constructor(public payload: Item[]) {}
 }
 
 export class CallSuccess implements Action {
@@ -59,6 +67,7 @@ export type All
   | CreateItem
   | UpdateItem
   | DeleteItem
+  | IgnoreItem
   | FetchDataSuccess
   | CallSuccess
   | CallFailure;

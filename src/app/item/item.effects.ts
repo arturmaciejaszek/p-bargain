@@ -1,19 +1,24 @@
-import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
+import { Location } from '@angular/common';
 import { Effect, Actions } from '@ngrx/effects';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import * as firebase from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { take } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
 
 
+import { AuthService } from './../auth/auth.service';
 import { Item } from './item.model';
-import * as ItemActions from './item.actions';
+import { IgnoredItem } from './ignored-item.model';
+import { User } from './../auth/user.model';
 import { ItemQuery } from './item-query.model';
+import * as ItemActions from './item.actions';
+import { allSettled } from 'q';
 export type Action = ItemActions.All;
 
 
@@ -21,7 +26,10 @@ export type Action = ItemActions.All;
 export class ItemEffects {
 
 
-  constructor(private actions: Actions, private db: AngularFirestore, private loc: Location) {
+  constructor(private actions: Actions,
+                private db: AngularFirestore,
+                private loc: Location,
+                private as: AuthService) {
 
   }
 
@@ -29,7 +37,9 @@ export class ItemEffects {
     fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
         .map( (action: ItemActions.FetchData) => action.payload)
         .switchMap( (payload: ItemQuery) => this.runQuery(payload))
+        .switchMap( (arraytoFilter: Item[]) => this.filterData(arraytoFilter))
         .map( (res: Item[]) => {
+            console.log(res);
             return new ItemActions.FetchDataSuccess(res);
         });
 
@@ -113,11 +123,32 @@ export class ItemEffects {
                 let q: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
                     q = q.where('status', '==', 'active');
                     if (query.category) { q = q.where('category', '==', query.category); }
-                    // if (query.price.minPrice) { q = q.where('price', '>=', query.price.minPrice); }
-                    // if (query.price.maxPrice) { q = q.where('price', '<=', query.price.maxPrice); }
                 return q;
         }).valueChanges();
         }
+    }
+
+    filterData(data: Item[]): Observable<Item[]> {
+        let userUID: string;
+        let ignoredList: string[];
+
+        return this.as.user$.pipe(take(1)).switchMap( (user: User) => {
+            userUID = user.uid;
+            return this.db.doc(`users/${userUID}/ignored/list`)
+            .valueChanges().pipe(take(1)).map( (list: {list: string[]}) => {
+                ignoredList = list.list;
+                let filteredArray: Item[];
+                filteredArray = data.filter( item => {
+                    const check: IgnoredItem = {uid: item.uid, posted: +item.posted };
+                    if (ignoredList.indexOf(JSON.stringify(check)) === -1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                return filteredArray;
+            });
+        });
     }
 
 }

@@ -3,7 +3,7 @@
 
   <div fxFlex>
     <div *ngFor="let item of data$|async; let i = index" fxLayoutAlign="center center">
-      <div *ngIf="i === 1">
+      <div *ngIf="i === 0">
           <app-item [item]="item"></app-item>
           <button mat-raised-button color="accent" (click)="ignore(item)">Don't show again</button>
       </div>
