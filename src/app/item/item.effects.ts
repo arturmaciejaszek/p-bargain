@@ -136,17 +136,21 @@ export class ItemEffects {
             userUID = user.uid;
             return this.db.doc(`users/${userUID}/ignored/list`)
             .valueChanges().pipe(take(1)).map( (list: {list: string[]}) => {
+                if (list.list) {
                 ignoredList = list.list;
                 let filteredArray: Item[];
                 filteredArray = data.filter( item => {
-                    const check: IgnoredItem = {uid: item.uid, posted: +item.posted };
-                    if (ignoredList.indexOf(JSON.stringify(check)) === -1) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-                return filteredArray;
+                        const check: IgnoredItem = {uid: item.uid, posted: +item.posted };
+                        if (ignoredList.indexOf(JSON.stringify(check)) === -1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
+                    return filteredArray;
+                } else {
+                    return data;
+                }
             });
         });
     }
