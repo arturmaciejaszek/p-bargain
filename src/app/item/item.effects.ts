@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Effect, Actions } from '@ngrx/effects';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { Store } from '@ngrx/store';
 import * as firebase from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
@@ -10,6 +11,7 @@ import { take } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/do';
 
 
 import { AuthService } from './../auth/auth.service';
@@ -18,7 +20,8 @@ import { IgnoredItem } from './ignored-item.model';
 import { User } from './../auth/user.model';
 import { ItemQuery } from './item-query.model';
 import * as ItemActions from './item.actions';
-import { allSettled } from 'q';
+import * as fromRoot from '../app.reducer';
+import * as UI from '../shared/ui.actions';
 export type Action = ItemActions.All;
 
 
@@ -29,17 +32,19 @@ export class ItemEffects {
   constructor(private actions: Actions,
                 private db: AngularFirestore,
                 private loc: Location,
-                private as: AuthService) {
+                private as: AuthService,
+                private store: Store<fromRoot.State>) {
 
   }
 
     @Effect()
     fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
+        .do(_ => this.store.dispatch(new UI.StartLoading()))
         .map( (action: ItemActions.FetchData) => action.payload)
         .switchMap( (payload: ItemQuery) => this.runQuery(payload))
         .switchMap( (arraytoFilter: Item[]) => this.filterData(arraytoFilter))
         .map( (res: Item[]) => {
-            console.log(res);
+            this.store.dispatch( new UI.StopLoading());
             return new ItemActions.FetchDataSuccess(res);
         });
 

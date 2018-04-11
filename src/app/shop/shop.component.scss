@@ -1,5 +1,13 @@
 .wrapper {
-    width: 90vw;
-    height: 80vh;
+    width: 95vw;
+    height: 85vh;
     margin: auto;
+    background-color: white;
+}
+
+mat-spinner, .noitems {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
 }

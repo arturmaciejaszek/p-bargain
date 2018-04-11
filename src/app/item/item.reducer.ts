@@ -5,7 +5,6 @@ import * as fromRoot from '../app.reducer';
 import * as actions from './item.actions';
 import { Item } from './item.model';
 
-// Entity adapter
 export const itemAdapter = createEntityAdapter<Item>({
     selectId: (item: Item) => item.uid
 });
@@ -15,14 +14,12 @@ export interface State extends fromRoot.State {
     item: ItemState;
 }
 
-// Default data / initial state
-
 const defaultState: ItemState = {
     ids: [],
      entities: {}
 };
 
-export const initialState: ItemState = itemAdapter.getInitialState(defaultState);
+export const initialState: ItemState = itemAdapter.getInitialState(null);
 
 export function itemReducer(
     state: ItemState = initialState,

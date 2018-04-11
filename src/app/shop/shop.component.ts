@@ -18,6 +18,7 @@ import * as ItemActions from '../item/item.actions';
   styleUrls: ['./shop.component.scss']
 })
 export class ShopComponent implements OnInit, OnDestroy {
+  loading$: Observable<boolean>;
   data$: Observable<Item[]>;
   ignoredList: string[] = [];
   userUID: string;
@@ -31,6 +32,8 @@ export class ShopComponent implements OnInit, OnDestroy {
     this.sub.push(this.as.user$.pipe(take(1)).subscribe( user => {
       this.userUID = user.uid;
     }));
+
+    this.loading$ = this.store.select(fromItem.getIsLoading);
 
     this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
       .valueChanges().subscribe( (list: {list: string[]}) => {
