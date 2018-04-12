@@ -141,7 +141,7 @@ export class ItemEffects {
             userUID = user.uid;
             return this.db.doc(`users/${userUID}/ignored/list`)
             .valueChanges().pipe(take(1)).map( (list: {list: string[]}) => {
-                if (list.list) {
+                if (list !== null) {
                 ignoredList = list.list;
                 let filteredArray: Item[];
                 filteredArray = data.filter( item => {

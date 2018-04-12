@@ -9,9 +9,9 @@
     <mat-spinner *ngIf="(loading$|async)"></mat-spinner>
     <div *ngIf="!(loading$|async)">
       <div *ngFor="let item of data$|async; let i = index" fxLayoutAlign="center center">
-        <div *ngIf="i === 0">
-          <app-item [item]="item"></app-item>
-          <button mat-raised-button color="accent" (click)="ignore(item)">Don't show again</button>
+        <div *ngIf="i === 0" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
+          <app-item [@animate] [item]="item"></app-item>
+          <button class="ignore" mat-raised-button color="accent" (click)="ignore(item)">X</button>
         </div>
       </div>
       <div class="noitems" *ngIf="(data$|async)?.length < 1">Sorry, not a single item meets your criteria</div>

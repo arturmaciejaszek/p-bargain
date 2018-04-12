@@ -1,5 +1,6 @@
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { trigger, state, style, transition, animate, keyframes, group } from '@angular/animations';
 import { Observable } from 'rxjs/observable';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
@@ -15,7 +16,25 @@ import * as ItemActions from '../item/item.actions';
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
-  styleUrls: ['./shop.component.scss']
+  styleUrls: ['./shop.component.scss'],
+  animations: [
+    trigger('animate', [
+      transition('void => *', [
+        animate(300, keyframes([
+          style({
+            transform: 'translateX(-100px)',
+            opacity: 0,
+            offset: 0
+          }),
+          style({
+            transform: 'translateX(0px)',
+            opacity: 1,
+            offset: 1
+          })
+        ]))
+      ])
+    ]),
+  ]
 })
 export class ShopComponent implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
