@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { User } from './../auth/user.model';
 import { AuthService } from './../auth/auth.service';
 import * as fromRoot from '../app.reducer';
+import * as ItemActions from '../item/item.actions';
 
 @Component({
   selector: 'app-shell',
@@ -30,7 +31,9 @@ export class ShellComponent implements OnInit, OnDestroy {
     this.userSub = this.authService.user$.subscribe(user => {
       if (user) {
         this.user = user;
-        this.photoURL$ = this.afs.ref(`/users/${this.user.uid}/thumb.jpg`).getDownloadURL();
+        if (user.photoURL !== './assets/img/thumb-anon.jpg') {
+          this.photoURL$ = this.afs.ref(`/users/${this.user.uid}/thumb.jpg`).getDownloadURL();
+        }
       } else {
         this.router.navigate(['/auth']);
       }
@@ -41,6 +44,7 @@ export class ShellComponent implements OnInit, OnDestroy {
     this.authService.logout()
     .then(_ => {
       this.user = null;
+      this.store.dispatch(new ItemActions.FetchDataSuccess([]));
     })
     .catch( err => console.log(err));
   }

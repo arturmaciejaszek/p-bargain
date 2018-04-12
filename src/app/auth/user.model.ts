@@ -8,7 +8,7 @@ export interface User {
     town?: string;
     status?: string;
     premium?: boolean;
-    fastbuy?: boolean;
+    fastBuy?: boolean;
     rank?: number;
     ignored?: IgnoredItem[];
 }

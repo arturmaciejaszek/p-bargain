@@ -67,7 +67,7 @@ export class AuthService {
             uid: user.uid,
             email: user.email,
             photoURL: './assets/img/thumb-anon.jpg',
-            fastBuy: 'false',
+            fastBuy: false,
             town: '',
             rank: 0
         };

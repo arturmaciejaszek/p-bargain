@@ -21,13 +21,18 @@
   </mat-card-content>
   <mat-card-actions>
     <div *ngIf="item?.status === 'active'">
-      <button *ngIf="!((loggedUser$ | async)?.uid === item?.owner)" mat-raised-button color="primary">
-        BUY FOR {{ item?.price }} $</button>
+      <button *ngIf="!((loggedUser$ | async)?.uid === item?.owner)" 
+              mat-raised-button color="primary"
+              (click)="buy()">
+              BUY FOR {{ item?.price }} $</button>
     </div>
     <div *ngIf="item?.status === 'sold'">
       <button mat-raised-button disabled>SOLD</button>
     </div>
-    <button *ngIf="(loggedUser$ | async)?.uid === item?.owner" mat-raised-button color="accent">DELETE</button>
+    <button *ngIf="(loggedUser$ | async)?.uid === item?.owner" 
+            mat-raised-button color="accent" 
+            (click)="delete()">
+            DELETE</button>
     <button *ngIf="editOn" mat-raised-button color="primary">BUY FOR {{ item?.price }} $</button>
   </mat-card-actions>
 </mat-card>

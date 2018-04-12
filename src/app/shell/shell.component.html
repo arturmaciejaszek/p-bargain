@@ -5,7 +5,7 @@
     <span fxFlex></span>
 
     <span *ngIf="isAuth$ | async">
-      <mat-spinner *ngIf="!(photoURL$ | async)" diameter="20" color="accent"></mat-spinner>
+      <mat-spinner *ngIf="(photoURL$ | async) === undefined" diameter="20" color="accent"></mat-spinner>
     </span>
     <div *ngIf="(isAuth$ | async) && user?.photoURL !== null">
       <button  

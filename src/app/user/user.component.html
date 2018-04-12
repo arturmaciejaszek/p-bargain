@@ -61,8 +61,8 @@
 
       <!-- FAST BUY MEANS THAT THERE WILL BE NO CONFIRMATION PROMPT ON BUYIN -->
       <mat-radio-group (change)="updateFastBuy($event)" [value]="user?.fastBuy">
-        <mat-radio-button color="primary" value="true">Fast Buy</mat-radio-button>
-        <mat-radio-button color="primary" value="false">Careful Buy</mat-radio-button>
+        <mat-radio-button color="primary" [value]='true' >Fast Buy</mat-radio-button>
+        <mat-radio-button color="primary" [value]='false' >Careful Buy</mat-radio-button>
       </mat-radio-group>
 
       <p>Would you like to change your password? <a href="javascript:void(0);" routerLink="/auth/changePass">Change</a></p>

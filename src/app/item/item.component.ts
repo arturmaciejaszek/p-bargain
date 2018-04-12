@@ -1,13 +1,18 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/observable';
+import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
+import { MatDialog } from '@angular/material';
+import { Store } from '@ngrx/store';
 import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
-
 
 import { AuthService } from './../auth/auth.service';
 import { Item } from './item.model';
 import { User } from './../auth/user.model';
+import { PromptComponent } from './../shared/prompt/prompt.component';
+import * as fromRoot from '../app.reducer';
+import * as ItemActions from '../item/item.actions';
 
 @Component({
   selector: 'app-item',
@@ -23,7 +28,10 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
   swiperConfig: SwiperConfigInterface;
   sub: Subscription;
 
-  constructor(private db: AngularFirestore, private as: AuthService) { }
+  constructor(private db: AngularFirestore,
+              private as: AuthService,
+              private dialog: MatDialog,
+              private store: Store<fromRoot.State>) { }
 
   ngOnInit() {
     this.loggedUser$ = this.as.user$;
@@ -44,6 +52,53 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
       scrollbar: true,
     };
 
+  }
+
+  buy() {
+    let fastbuy: boolean;
+    let loggedUserUID: string;
+    this.loggedUser$.pipe(take(1)).subscribe( res => {
+      fastbuy = res.fastBuy;
+      loggedUserUID = res.uid;
+
+      if (fastbuy === true) {
+        this.store.dispatch( new ItemActions.BuyItem({
+          uid: this.item.uid,
+          changes: {
+            ...this.item,
+            buyer: loggedUserUID,
+            sold: new Date(),
+            status: 'sold'
+          }
+        }));
+      } else {
+        const dialogRef = this.dialog.open(PromptComponent, {hasBackdrop: false});
+
+        dialogRef.afterClosed().pipe(take(1)).subscribe( ref => {
+          if (ref) {
+            this.store.dispatch( new ItemActions.BuyItem({
+              uid: this.item.uid,
+              changes: {
+                ...this.item,
+                buyer: loggedUserUID,
+                sold: new Date(),
+                status: 'sold'
+                }
+            }));
+          }
+        });
+      }
+    });
+  }
+
+  delete() {
+    const dialogRef = this.dialog.open(PromptComponent, {hasBackdrop: false});
+
+    dialogRef.afterClosed().pipe(take(1)).subscribe( res => {
+      if (res) {
+        this.store.dispatch( new ItemActions.DeleteItem(this.item));
+      }
+    });
   }
 
   ngOnChanges() {

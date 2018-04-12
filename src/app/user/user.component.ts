@@ -34,8 +34,12 @@ export class UserComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authService.user$.subscribe( (user: User) => {
-      this.user = user;
-      this.getUserItems();
+      if (user) {
+        this.user = user;
+        if (user.uid !== null) {
+          this.getUserItems();
+        }
+      }
     });
 
     this.sub = this.store.select(fromItem.selectAll).subscribe( (res: Item[]) => this.userItems.data = res);
@@ -69,7 +73,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   getUserItems() {
-    this.store.dispatch(new ItemActions.FetchData({ownerUID: this.user.uid}));
+      this.store.dispatch(new ItemActions.FetchData({ownerUID: this.user.uid}));
   }
 
   deleteItem(item: Item) {

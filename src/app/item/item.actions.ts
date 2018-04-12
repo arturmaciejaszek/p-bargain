@@ -6,7 +6,7 @@ export const FETCH_DATA = '[Item] Fetch Data';
 export const FETCH_DATA_SUCCESS = '[Item] Fetch Data Success';
 
 export const CREATE_ITEM = '[Item] Create Item';
-export const UPDATE_ITEM = '[Item] Update Item';
+export const BUY_ITEM = '[Item] Buy Item';
 export const DELETE_ITEM = '[Item] Delete Item';
 
 export const IGNORE_ITEM = '[Item] Ignore Item';
@@ -26,8 +26,8 @@ export class CreateItem implements Action {
     constructor(public payload: Item) {}
 }
 
-export class UpdateItem implements Action {
-    readonly type = UPDATE_ITEM;
+export class BuyItem implements Action {
+    readonly type = BUY_ITEM;
 
     constructor(public payload: {uid: string, changes: Partial<Item>}) {}
 }
@@ -65,7 +65,7 @@ export class CallFailure implements Action {
 export type All
   = FetchData
   | CreateItem
-  | UpdateItem
+  | BuyItem
   | DeleteItem
   | IgnoreItem
   | FetchDataSuccess

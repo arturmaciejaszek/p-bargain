@@ -1,16 +1,18 @@
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { NgModule } from '@angular/core';
 import { SwiperModule } from 'ngx-swiper-wrapper';
 
+import { PromptComponent } from './../shared/prompt/prompt.component';
 import { SharedModule } from './../shared/shared.module';
 import { ItemComponent } from './item.component';
-import { EffectsModule } from '@ngrx/effects';
 import { ItemEffects } from './item.effects';
 import { itemReducer } from './item.reducer';
 
 @NgModule({
     declarations: [
-        ItemComponent
+        ItemComponent,
+        PromptComponent
     ],
     imports: [
         SharedModule,
@@ -19,7 +21,9 @@ import { itemReducer } from './item.reducer';
         StoreModule.forFeature('item', itemReducer)
     ],
     exports: [
-        ItemComponent
-    ]
+        ItemComponent,
+        PromptComponent
+    ],
+    entryComponents: [PromptComponent]
 })
 export class ItemModule {}

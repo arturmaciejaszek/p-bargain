@@ -40,6 +40,7 @@ export class ItemEffects {
     @Effect()
     fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
         .do(_ => this.store.dispatch(new UI.StartLoading()))
+        .do(_ => this.store.dispatch(new ItemActions.FetchDataSuccess([])))
         .map( (action: ItemActions.FetchData) => action.payload)
         .switchMap( (payload: ItemQuery) => this.runQuery(payload))
         .switchMap( (arraytoFilter: Item[]) => this.filterData(arraytoFilter))
@@ -72,11 +73,10 @@ export class ItemEffects {
         });
 
     @Effect()
-    updateItem: Observable<Action> = this.actions.ofType(ItemActions.UPDATE_ITEM)
-        .map( (action: ItemActions.UpdateItem) => action.payload )
-        .mergeMap( (data: {uid: string, changes: Partial<Item>}) => of(this.batchUpdate(data)))
+    buyItem: Observable<Action> = this.actions.ofType(ItemActions.BUY_ITEM)
+        .map( (action: ItemActions.BuyItem) => action.payload )
+        .mergeMap( (data: {uid: string, changes: Partial<Item>}) => of(this.batchOnBuy(data)))
         .map( res => {
-            res.then( resolve => this.loc.back());
             return new ItemActions.CallSuccess();
         })
         .catch( err => {
@@ -108,14 +108,16 @@ export class ItemEffects {
         return createBatch.commit();
     }
 
-    batchUpdate(data: {uid: string, changes: Partial<Item>}) {
+    batchOnBuy(data: {uid: string, changes: Partial<Item>}) {
         const createBatch = this.db.firestore.batch();
 
         const userItemsRef = this.db.doc(`users/${data.changes.owner}/items/${data.uid}`).ref;
         const townItemRef = this.db.doc(`items/towns/${data.changes.town}/${data.uid}`).ref;
+        const bargainItemRef = this.db.doc(`bargains/${data.uid}`).ref;
 
-        createBatch.update(userItemsRef, data);
-        createBatch.update(townItemRef, data);
+        createBatch.update(townItemRef, data.changes);
+        createBatch.update(userItemsRef, data.changes);
+        createBatch.set(bargainItemRef, data.changes);
 
         return createBatch.commit();
     }
@@ -123,7 +125,7 @@ export class ItemEffects {
     runQuery(query: ItemQuery) {
         if (query.ownerUID) {
             return this.db.collection('users').doc(`${query.ownerUID}`).collection('items').valueChanges();
-        } else {
+        } else if (query.town) {
             return this.db.collection(`items/towns/${query.town}`, ref => {
                 let q: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
                     q = q.where('status', '==', 'active');

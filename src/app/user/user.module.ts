@@ -14,7 +14,6 @@ import { PromptComponent } from './../shared/prompt/prompt.component';
         UserComponent,
         CropComponent,
         ImageCropperComponent,
-        PromptComponent
     ],
     imports: [
         SharedModule,
