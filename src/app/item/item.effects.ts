@@ -47,7 +47,11 @@ export class ItemEffects {
         .map( (res: Item[]) => {
             this.store.dispatch( new UI.StopLoading());
             return new ItemActions.FetchDataSuccess(res);
-        });
+        })
+        .catch( err => {
+            console.log(err);
+            return of( new ItemActions.CallFailure());
+         });
 
     @Effect()
     deleteItem: Observable<Action> = this.actions.ofType(ItemActions.DELETE_ITEM)
@@ -122,7 +126,7 @@ export class ItemEffects {
         return createBatch.commit();
     }
 
-    runQuery(query: ItemQuery) {
+    runQuery(query: ItemQuery): Observable<any> {
         if (query.ownerUID) {
             return this.db.collection('users').doc(`${query.ownerUID}`).collection('items').valueChanges();
         } else if (query.town) {
@@ -131,7 +135,9 @@ export class ItemEffects {
                     q = q.where('status', '==', 'active');
                     if (query.category) { q = q.where('category', '==', query.category); }
                 return q;
-        }).valueChanges();
+            }).valueChanges();
+        } else {
+            return of([]);
         }
     }
 
