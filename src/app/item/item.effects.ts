@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
+import { Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Store } from '@ngrx/store';
@@ -7,7 +8,7 @@ import * as firebase from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { take } from 'rxjs/operators';
+import { take, catchError, map } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
@@ -22,7 +23,7 @@ import { ItemQuery } from './item-query.model';
 import * as ItemActions from './item.actions';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
-export type Action = ItemActions.All;
+// export type Action = ItemActions.All;
 
 
 @Injectable()
@@ -39,19 +40,27 @@ export class ItemEffects {
 
     @Effect()
     fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
+    // SET LOADING
         .do(_ => this.store.dispatch(new UI.StartLoading()))
+    // RESET STORE
         .do(_ => this.store.dispatch(new ItemActions.FetchDataSuccess([])))
         .map( (action: ItemActions.FetchData) => action.payload)
-        .switchMap( (payload: ItemQuery) => this.runQuery(payload))
-        .switchMap( (arraytoFilter: Item[]) => this.filterData(arraytoFilter))
-        .map( (res: Item[]) => {
-            this.store.dispatch( new UI.StopLoading());
-            return new ItemActions.FetchDataSuccess(res);
+    // CREATE DISPOSABLE STREAM THAT WILL SURVIVE FIREBASE ERRORS
+        .switchMap( (payload: ItemQuery) => {
+            return of(payload)
+                .switchMap( res => this.runQuery(res))
+                .catch( err => of() );
         })
-        .catch( err => {
-            console.log(err);
-            return of( new ItemActions.CallFailure());
-         });
+        .switchMap( (arraytoFilter: Item[]) => this.filterData(arraytoFilter))
+        .pipe(
+            map( (res: Item[]) => {
+                this.store.dispatch( new UI.StopLoading());
+                return new ItemActions.FetchDataSuccess(res);
+            }),
+            catchError( err => {
+                return of(new ItemActions.CallFailure());
+            })
+        );
 
     @Effect()
     deleteItem: Observable<Action> = this.actions.ofType(ItemActions.DELETE_ITEM)

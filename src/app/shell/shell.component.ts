@@ -17,9 +17,9 @@ import * as ItemActions from '../item/item.actions';
 })
 export class ShellComponent implements OnInit, OnDestroy {
   isAuth$: Observable<boolean>;
-  userSub: Subscription;
-  user: User;
   photoURL$: Observable<string>;
+  user: User;
+  userSub: Subscription;
 
   constructor(private store: Store<fromRoot.State>,
     private authService: AuthService,
@@ -43,8 +43,8 @@ export class ShellComponent implements OnInit, OnDestroy {
   onLogout() {
     this.authService.logout()
     .then(_ => {
-      this.user = null;
       this.store.dispatch(new ItemActions.FetchDataSuccess([]));
+      this.user = null;
     })
     .catch( err => console.log(err));
   }

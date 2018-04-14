@@ -4,9 +4,8 @@
 
     <span fxFlex></span>
 
-    <span *ngIf="isAuth$ | async">
-      <mat-spinner *ngIf="(photoURL$ | async) === undefined" diameter="20" color="accent"></mat-spinner>
-    </span>
+    <mat-spinner *ngIf="(isAuth$ | async) && !(photoURL$ | async)" diameter="20" color="accent"></mat-spinner>
+
     <div *ngIf="(isAuth$ | async) && user?.photoURL !== null">
       <button  
         mat-button 
