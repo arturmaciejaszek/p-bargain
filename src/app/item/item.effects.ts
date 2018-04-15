@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore';
 import { Store } from '@ngrx/store';
 import * as firebase from 'firebase';
 
@@ -23,7 +23,6 @@ import { ItemQuery } from './item-query.model';
 import * as ItemActions from './item.actions';
 import * as fromRoot from '../app.reducer';
 import * as UI from '../shared/ui.actions';
-// export type Action = ItemActions.All;
 
 
 @Injectable()
@@ -45,7 +44,7 @@ export class ItemEffects {
     // RESET STORE
         .do(_ => this.store.dispatch(new ItemActions.FetchDataSuccess([])))
         .map( (action: ItemActions.FetchData) => action.payload)
-    // CREATE DISPOSABLE STREAM THAT WILL SURVIVE FIREBASE ERRORS
+    // DISPOSABLE STREAM THAT WILL SURVIVE FIREBASE ERRORS
         .switchMap( (payload: ItemQuery) => {
             return of(payload)
                 .switchMap( res => this.runQuery(res))
@@ -128,11 +127,18 @@ export class ItemEffects {
         const townItemRef = this.db.doc(`items/towns/${data.changes.town}/${data.uid}`).ref;
         const bargainItemRef = this.db.doc(`bargains/${data.uid}`).ref;
 
-        createBatch.update(townItemRef, data.changes);
-        createBatch.update(userItemsRef, data.changes);
-        createBatch.set(bargainItemRef, data.changes);
+        townItemRef.get().then( snapshot => {
+            if (!snapshot.data().buyer) {
+                createBatch.update(townItemRef, data.changes);
+                createBatch.update(userItemsRef, data.changes);
+                createBatch.set(bargainItemRef, data.changes);
 
-        return createBatch.commit();
+                return createBatch.commit();
+            } else {
+                return null;
+            }
+        });
+
     }
 
     runQuery(query: ItemQuery): Observable<any> {

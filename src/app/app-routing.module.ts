@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'shop', loadChildren: './shop/shop.module#ShopModule', canLoad: [AuthGuard]},
   { path: 'auth', component: AuthComponent, canActivate: [AuthReverseGuard]},
   { path: 'profile', loadChildren: './user/user.module#UserModule', canLoad: [AuthGuard]},
+  { path: 'bargains', loadChildren: './bargains/bargains.module#BargainsModule', canLoad: [AuthGuard]},
   { path: 'add', loadChildren: './add-item/add-item.module#AddItemModule', canLoad: [AuthGuard]}
 ];
 
