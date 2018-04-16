@@ -1,4 +1,4 @@
-import { EntityState, createEntityAdapter, Update } from '@ngrx/entity';
+import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import * as fromRoot from '../app.reducer';
@@ -28,27 +28,14 @@ export function itemReducer(
     switch (action.type) {
 
         case actions.FETCH_DATA_SUCCESS:
-        // It's good for shop but bad for profile and bargains gotta think of something else,
-        // additional payload mby or route reading or mby just add a second stream or even second store
-
-            // let mappedPayload: Update<Item>[];
-            // mappedPayload = action.payload.map( item => {
-            //     let updItem: Update<Item>;
-            //     return updItem = {
-            //         id: item.uid,
-            //         changes: item
-            //     };
-            // });
-
-            // if (state.ids.length < 1) {
-            //     return itemAdapter.upsertMany(mappedPayload, state);
-            // } else {
-            //     // return itemAdapter.addAll(action.payload, state);
-            //     return
-            // }
-
-            // return itemAdapter.upsertMany(mappedPayload, state);
             return itemAdapter.addAll(action.payload, state);
+
+        case actions.SET_SHOP_DATA:
+            if (state.ids.length < 1) {
+                return itemAdapter.addAll(action.payload, state);
+            } else {
+                return state;
+            }
 
         case actions.IGNORE_ITEM:
             return itemAdapter.removeOne(action.payload.uid, state);

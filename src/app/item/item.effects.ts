@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { take, catchError, map } from 'rxjs/operators';
+import { take, catchError, map, combineLatest, mergeMap } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
@@ -37,24 +37,34 @@ export class ItemEffects {
 
   }
 
+  // REFACTOR THE EFFECT , IT HAS TO BE ONLY ONE AND IT NEEDS TO KNOW WHERE THE ACTION COMES FROM COUSE
+  //   IT HAS TO HAVE AN OPTIONAL FILTER NOT MANDATORY ONE FOR OTHER COMPONENTS
+
     @Effect()
     fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
-    // SET LOADING
         .do(_ => this.store.dispatch(new UI.StartLoading()))
-    // RESET STORE
         .do(_ => this.store.dispatch(new ItemActions.FetchDataSuccess([])))
         .map( (action: ItemActions.FetchData) => action.payload)
-    // DISPOSABLE STREAM THAT WILL SURVIVE FIREBASE ERRORS
         .switchMap( (payload: ItemQuery) => {
             return of(payload)
-                .switchMap( res => this.runQuery(res))
+                .switchMap( res => this.runQuery(res).pipe(combineLatest(of(res.ownerUID))))
                 .catch( err => of() );
         })
-        .switchMap( (arraytoFilter: Item[]) => this.filterData(arraytoFilter))
+        .mergeMap(([queryResult, userUID]: [any, string]) => {
+            if (!userUID) {
+                return this.filterData(queryResult).pipe(combineLatest(of(false)));
+            } else {
+                return of(queryResult).pipe(combineLatest(of(true)));
+            }
+        })
         .pipe(
-            map( (res: Item[]) => {
+            map( ([result, destructive]: [Item[], boolean]) => {
                 this.store.dispatch( new UI.StopLoading());
-                return new ItemActions.FetchDataSuccess(res);
+                if (destructive) {
+                    return new ItemActions.FetchDataSuccess(result);
+                } else {
+                    return new ItemActions.SetShopData(result);
+                }
             }),
             catchError( err => {
                 return of(new ItemActions.CallFailure());

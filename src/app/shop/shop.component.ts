@@ -61,16 +61,16 @@ export class ShopComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub.push(this.as.user$.pipe(take(1)).subscribe( user => {
       this.userUID = user.uid;
+      this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
+        .valueChanges().subscribe( (list: {list: string[]}) => {
+          if (list) {
+            this.ignoredList = list.list;
+          }
+        }));
     }));
 
     this.loading$ = this.store.select(fromItem.getIsLoading);
 
-    this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
-      .valueChanges().subscribe( (list: {list: string[]}) => {
-        if (list) {
-          this.ignoredList = list.list;
-        }
-      }));
 
     this.data$ = this.store.select( fromItem.selectAll );
   }
@@ -80,9 +80,11 @@ export class ShopComponent implements OnInit, OnDestroy {
       uid: item.uid,
       posted: +item.posted
     };
-    this.ignoredList.push(JSON.stringify(ignoreItemData));
+    let newList: string[];
+    // this.ignoredList.push(JSON.stringify(ignoreItemData));
+    newList = [...this.ignoredList, JSON.stringify(ignoreItemData)];
     this.store.dispatch(new ItemActions.IgnoreItem(item));
-    this.db.doc(`users/${this.userUID}`).collection('ignored').doc('list').set({list: this.ignoredList});
+    this.db.doc(`users/${this.userUID}`).collection('ignored').doc('list').set({list: newList});
   }
 
   ngOnDestroy() {

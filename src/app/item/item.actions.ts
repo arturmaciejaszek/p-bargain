@@ -4,6 +4,7 @@ import { ItemQuery } from './item-query.model';
 
 export const FETCH_DATA = '[Item] Fetch Data';
 export const FETCH_DATA_SUCCESS = '[Item] Fetch Data Success';
+export const SET_SHOP_DATA = '[Item] Set Shop Data';
 
 export const CREATE_ITEM = '[Item] Create Item';
 export const BUY_ITEM = '[Item] Buy Item';
@@ -18,6 +19,18 @@ export class FetchData implements Action {
     readonly type = FETCH_DATA;
 
     constructor(public payload: ItemQuery) {}
+}
+
+export class FetchDataSuccess implements Action {
+    readonly type = FETCH_DATA_SUCCESS;
+
+    constructor(public payload: Item[]) {}
+}
+
+export class SetShopData implements Action {
+    readonly type = SET_SHOP_DATA;
+
+    constructor(public payload: Item[]) {}
 }
 
 export class CreateItem implements Action {
@@ -44,11 +57,6 @@ export class IgnoreItem implements Action {
     constructor(public payload: Item) {}
 }
 
-export class FetchDataSuccess implements Action {
-    readonly type = FETCH_DATA_SUCCESS;
-
-    constructor(public payload: Item[]) {}
-}
 
 export class CallSuccess implements Action {
     readonly type = CALL_SUCCESS;
@@ -64,10 +72,11 @@ export class CallFailure implements Action {
 
 export type All
   = FetchData
+  | FetchDataSuccess
+  | SetShopData
   | CreateItem
   | BuyItem
   | DeleteItem
   | IgnoreItem
-  | FetchDataSuccess
   | CallSuccess
   | CallFailure;

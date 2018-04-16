@@ -1,3 +1,4 @@
+import { SetShopData } from './../../item/item.actions';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { FormControl } from '@angular/forms';
