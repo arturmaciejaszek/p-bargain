@@ -6,6 +6,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { Store } from '@ngrx/store';
 
+import { getUser } from './../app.reducer';
 import * as fromItem from '../item/item.reducer';
 import * as ItemActions from '../item/item.actions';
 import { AuthService } from './../auth/auth.service';
@@ -36,16 +37,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.formInit();
     this.itemUID = this.db.createId();
     this.categories = ['clothes', 'books', 'accessories', 'toys', 'crafts', 'others'];
-    this.sub = this.authService.user$.subscribe( user => {
-      this.user = user;
-    });
+    this.sub = this.store.select(getUser).subscribe( user => this.user = user);
   }
 
   private formInit() {
     this.itemForm = new FormGroup({
       name: new FormControl('Name', Validators.required),
       category: new FormControl('others', Validators.required),
-      desc: new FormControl('your description goes here', Validators.required),
+      desc: new FormControl('your description goes here', [Validators.required, Validators.maxLength(55)]),
       price: new FormControl(1, Validators.required)
     });
   }

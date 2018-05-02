@@ -6,6 +6,8 @@ export const FETCH_DATA = '[Item] Fetch Data';
 export const FETCH_DATA_SUCCESS = '[Item] Fetch Data Success';
 export const SET_SHOP_DATA = '[Item] Set Shop Data';
 
+export const RESET_STATE = '[Item] Reset State';
+
 export const CREATE_ITEM = '[Item] Create Item';
 export const BUY_ITEM = '[Item] Buy Item';
 export const DELETE_ITEM = '[Item] Delete Item';
@@ -31,6 +33,10 @@ export class SetShopData implements Action {
     readonly type = SET_SHOP_DATA;
 
     constructor(public payload: Item[]) {}
+}
+
+export class ResetState implements Action {
+    readonly type = RESET_STATE;
 }
 
 export class CreateItem implements Action {
@@ -74,6 +80,7 @@ export type All
   = FetchData
   | FetchDataSuccess
   | SetShopData
+  | ResetState
   | CreateItem
   | BuyItem
   | DeleteItem

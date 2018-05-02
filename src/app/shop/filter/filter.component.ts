@@ -1,5 +1,5 @@
 import { SetShopData } from './../../item/item.actions';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { FormControl } from '@angular/forms';
 import { take } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import * as fromItem from '../../item/item.reducer';
 import * as ItemActions from '../../item/item.actions';
 import { AuthService } from './../../auth/auth.service';
 import { ItemQuery } from './../../item/item-query.model';
+import { getUser } from '../../app.reducer';
 
 @Component({
   selector: 'app-filter',
@@ -21,16 +22,18 @@ export class FilterComponent implements OnInit {
   categories: string[];
   query: ItemQuery = {};
 
-  constructor(private store: Store<fromItem.State>, private as: AuthService) { }
+  constructor(private store: Store<fromItem.State>) { }
 
   ngOnInit() {
     this.townControl = new FormControl();
     this.categories = ['clothes', 'books', 'accessories', 'toys', 'crafts', 'others'];
 
-    this.as.user$.pipe(take(1)).subscribe( user => {
-      this.selectedTown = user.town;
-      this.query.town = user.town;
-      this.fetchItems();
+    this.store.select(getUser).pipe(take(2)).subscribe( user => {
+      if (user) {
+        this.selectedTown = user.town;
+        this.query.town = user.town;
+        this.fetchItems();
+      }
     });
 
     const autocomplete = new google.maps.places.Autocomplete(this.townInput.nativeElement, {types: ['(cities)'] });

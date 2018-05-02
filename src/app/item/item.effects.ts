@@ -4,11 +4,13 @@ import { Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore';
 import { Store } from '@ngrx/store';
+import { getUser } from './../app.reducer';
 import * as firebase from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { take, catchError, map, combineLatest, mergeMap } from 'rxjs/operators';
+import { zip } from 'rxjs/observable/zip';
+import { take, catchError, map, combineLatest } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
@@ -32,18 +34,14 @@ export class ItemEffects {
   constructor(private actions: Actions,
                 private db: AngularFirestore,
                 private loc: Location,
-                private as: AuthService,
                 private store: Store<fromRoot.State>) {
 
   }
 
-  // REFACTOR THE EFFECT , IT HAS TO BE ONLY ONE AND IT NEEDS TO KNOW WHERE THE ACTION COMES FROM COUSE
-  //   IT HAS TO HAVE AN OPTIONAL FILTER NOT MANDATORY ONE FOR OTHER COMPONENTS
-
     @Effect()
     fetchData: Observable<Action> = this.actions.ofType(ItemActions.FETCH_DATA)
         .do(_ => this.store.dispatch(new UI.StartLoading()))
-        .do(_ => this.store.dispatch(new ItemActions.FetchDataSuccess([])))
+        .do(_ => this.store.dispatch(new ItemActions.ResetState()))
         .map( (action: ItemActions.FetchData) => action.payload)
         .switchMap( (payload: ItemQuery) => {
             return of(payload)
@@ -94,6 +92,7 @@ export class ItemEffects {
             return of( new ItemActions.CallFailure());
         });
 
+        // ADD IGNORE ACTION TO BUY EFFECT
     @Effect()
     buyItem: Observable<Action> = this.actions.ofType(ItemActions.BUY_ITEM)
         .map( (action: ItemActions.BuyItem) => action.payload )
@@ -152,7 +151,15 @@ export class ItemEffects {
     }
 
     runQuery(query: ItemQuery): Observable<any> {
-        if (query.ownerUID) {
+        if (query.ownerUID && query.bargains) {
+            const itemsSold = this.db.collection<Item>('bargains', ref =>
+                ref.where('owner', '==', query.ownerUID)
+                    .where('status', '==', 'sold')).valueChanges();
+            const itemsBought = this.db.collection<Item>('bargains', ref =>
+                ref.where('buyer', '==', query.ownerUID)
+                    .where('status', '==', 'sold')).valueChanges();
+            return zip(itemsBought, itemsSold).map( ([bought, sold]) => [...bought, ...sold]);
+        } else if (query.ownerUID) {
             return this.db.collection('users').doc(`${query.ownerUID}`).collection('items').valueChanges();
         } else if (query.town) {
             return this.db.collection(`items/towns/${query.town}`, ref => {
@@ -170,7 +177,7 @@ export class ItemEffects {
         let userUID: string;
         let ignoredList: string[];
 
-        return this.as.user$.pipe(take(1)).switchMap( (user: User) => {
+        return this.store.select(getUser).pipe(take(1)).switchMap( (user: User) => {
             userUID = user.uid;
             return this.db.doc(`users/${userUID}/ignored/list`)
             .valueChanges().pipe(take(1)).map( (list: {list: string[]}) => {

@@ -14,6 +14,7 @@ import { CropComponent } from './crop/crop.component';
 import { AuthService } from '../auth/auth.service';
 import { User } from './../auth/user.model';
 import { Item } from './../item/item.model';
+import { getUser } from '../app.reducer';
 
 @Component({
   selector: 'app-user',
@@ -23,7 +24,7 @@ import { Item } from './../item/item.model';
 export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('townInput') townInput: ElementRef;
   user: User;
-  sub: Subscription;
+  sub: Subscription[] = [];
   townControl: FormControl;
   userItems = new MatTableDataSource<Item>();
   displayedColumns = ['name', 'price', 'action'];
@@ -33,14 +34,14 @@ export class UserComponent implements OnInit, OnDestroy {
               private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.authService.user$.subscribe( (user: User) => {
+    this.sub.push(this.store.select(getUser).subscribe( (user: User) => {
       if (user && user.uid) {
         this.user = user;
         this.getUserItems();
       }
-    });
+    }));
 
-    this.sub = this.store.select(fromItem.selectAll).subscribe( (res: Item[]) => this.userItems.data = res);
+    this.sub.push(this.store.select(fromItem.selectAll).subscribe( (res: Item[]) => this.userItems.data = res));
 
     this.townControl = new FormControl();
 
@@ -85,7 +86,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.sub.forEach( sub => sub.unsubscribe());
   }
 
 }

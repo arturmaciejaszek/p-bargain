@@ -12,16 +12,20 @@ import { AppComponent } from './app.component';
 import { reducers } from './app.reducer';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
+import { ChatService } from './bargains/chat/chat.service';
 import { SharedModule } from './shared/shared.module';
 import { ShellModule } from './shell/shell.module';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { WelcomeModule } from './welcome/welcome.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    WelcomeModule,
     ShellModule,
     AuthModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -35,7 +39,7 @@ import { ShellModule } from './shell/shell.module';
       logOnly: environment.production
     })
   ],
-  providers: [AuthService],
+  providers: [AuthService, ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

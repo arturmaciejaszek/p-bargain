@@ -1,24 +1,30 @@
 import { Action } from '@ngrx/store';
 
-import { AuthActions, SET_AUTHENTICATED, SET_UNAUTHENTICATED  } from './auth.actions';
+import { User } from './user.model';
+
+import { AuthActions, SET_USER, UNSET_USER } from './auth.actions';
 
 export interface State {
   isAuthenticated: boolean;
+  loggedUser: User;
 }
 
 const initialState: State = {
   isAuthenticated: false,
+  loggedUser: null
 };
 
 export function authReducer(state = initialState, action: AuthActions) {
   switch (action.type) {
-    case SET_AUTHENTICATED:
+    case SET_USER:
       return {
-        isAuthenticated: true
+        isAuthenticated: true,
+        loggedUser: action.payload
       };
-    case SET_UNAUTHENTICATED:
+    case UNSET_USER:
       return {
-        isAuthenticated: false
+        isAuthenticated: false,
+        loggedUser: null
       };
     default: {
       return state;
@@ -27,3 +33,5 @@ export function authReducer(state = initialState, action: AuthActions) {
 }
 
 export const getIsAuthenticated = (state: State) => state.isAuthenticated;
+
+export const getLoggedUser = (state: State) => state.loggedUser;

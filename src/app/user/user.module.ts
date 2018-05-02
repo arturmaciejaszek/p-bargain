@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ImageCropperComponent } from 'ng2-img-cropper';
+import { ImageCropperModule } from 'ng2-img-cropper';
 
 import { SharedModule } from './../shared/shared.module';
 import { ItemModule } from './../item/item.module';
@@ -13,12 +13,12 @@ import { PromptComponent } from './../shared/prompt/prompt.component';
     declarations: [
         UserComponent,
         CropComponent,
-        ImageCropperComponent,
     ],
     imports: [
         SharedModule,
         UserRoutingModule,
         ReactiveFormsModule,
+        ImageCropperModule,
         ItemModule
     ],
     exports: [],

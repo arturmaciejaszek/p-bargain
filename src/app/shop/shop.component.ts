@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AuthService } from './../auth/auth.service';
+import { getUser } from './../app.reducer';
 import { Item } from './../item/item.model';
 import { User } from 'firebase';
 import { IgnoredItem } from './../item/ignored-item.model';
@@ -55,24 +56,24 @@ export class ShopComponent implements OnInit, OnDestroy {
   sub: Subscription[] = [];
 
   constructor(private store: Store<fromItem.State>,
-              private as: AuthService,
               private db: AngularFirestore) { }
 
   ngOnInit() {
-    this.sub.push(this.as.user$.pipe(take(1)).subscribe( user => {
-      this.userUID = user.uid;
-      this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
-        .valueChanges().subscribe( (list: {list: string[]}) => {
-          if (list) {
-            this.ignoredList = list.list;
-          }
-        }));
+    this.sub.push(this.store.select(getUser).pipe(take(1)).subscribe( user => {
+      if (user) {
+        this.userUID = user.uid;
+        this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
+          .valueChanges().subscribe( (list: {list: string[]}) => {
+            if (list) {
+              this.ignoredList = list.list;
+            }
+          }));
+      }
     }));
 
     this.loading$ = this.store.select(fromItem.getIsLoading);
 
-
-    this.data$ = this.store.select( fromItem.selectAll );
+    this.data$ = this.store.select( fromItem.getNonMine );
   }
 
   ignore(item: Item) {

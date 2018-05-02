@@ -1,33 +1,33 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 
 import * as fromRoot from '../app.reducer';
 import { StartLoading, StopLoading } from './../shared/ui.actions';
-import { SetAuthenticated, SetUnauthenticated } from './auth.actions';
+import { SetUser, UnsetUser } from './auth.actions';
 
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 
 @Injectable()
 export class AuthService {
-    user$: Observable<User>;
 
     constructor(private af: AngularFireAuth,
         private db: AngularFirestore,
         private store: Store<fromRoot.State>,
         private router: Router) {
 
-            this.user$ = this.af.authState.switchMap( user => {
+            this.af.authState.subscribe( user => {
                 if (user) {
-                    this.store.dispatch(new SetAuthenticated());
-                    return this.db.doc<any>(`users/${user.uid}`).valueChanges();
+                    this.db.doc<any>(`users/${user.uid}`)
+                        .valueChanges()
+                        .subscribe( (data: User) => this.store.dispatch(new SetUser(data)) );
                 } else {
-                    this.store.dispatch(new SetUnauthenticated());
-                    return Observable.of(null);
+                    this.store.dispatch(new UnsetUser());
                 }
             });
 

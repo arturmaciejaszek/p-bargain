@@ -1,3 +1,36 @@
-<p>
-  bargains works!
-</p>
+<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5rem" class="bargains-wrapper">
+  <div class="bargains" fxFlex="40">
+      <mat-form-field floatLabel="never">
+        <input
+          matInput 
+          #filter 
+          type="text" 
+          placeholder="Search for an item"
+          value="">
+      </mat-form-field>
+    <mat-spinner *ngIf="loading$|async"></mat-spinner>
+    <p>Sold:</p> 
+    <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:true | filterPipe:filter.value)">
+      <app-bargain-item 
+        [item]="bargain" 
+        (openEmitter)="expanded($event)"
+        (chatEmitter)="activeItemChat = $event" 
+        [expanded]="bargain.uid === currentlyExpanded"
+        [loggedUser]="loggedUser"></app-bargain-item>
+    </div>
+    <p>Bought:</p> 
+    <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:false | filterPipe:filter.value)">
+      <app-bargain-item 
+        [item]="bargain" 
+        (openEmitter)="expanded($event)"
+        (chatEmitter)="activeItemChat = $event" 
+        [expanded]="bargain.uid === currentlyExpanded"
+        [loggedUser]="loggedUser"></app-bargain-item>
+    </div>
+  </div>
+
+  <div class="chat" fxFlex="40">
+    <app-chat [loggedUser]="loggedUser" [activeItem]="activeItemChat"></app-chat>
+  </div>
+
+</div>

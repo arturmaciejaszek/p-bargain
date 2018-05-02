@@ -1,0 +1,26 @@
+<div class="chat">
+  <div class="chat__Output">
+
+  </div>
+  <mat-form-field floatLabel="never">
+    <input
+      matInput 
+      #msg
+      id="msg" 
+      type="text" 
+      class="chat__Input"
+      placeholder="Type a message"
+      value=""
+      (keyup.enter)="sendMsg(msg.value)">
+    <button 
+      mat-button
+      color="primary"
+      [disabled]="!msg.value" 
+      matSuffix 
+      mat-icon-button 
+      (click)="sendMsg(msg.value)">
+      <mat-icon>send</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+

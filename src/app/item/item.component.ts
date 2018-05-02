@@ -13,6 +13,7 @@ import { User } from './../auth/user.model';
 import { PromptComponent } from './../shared/prompt/prompt.component';
 import * as fromRoot from '../app.reducer';
 import * as ItemActions from '../item/item.actions';
+import { getUser } from './../app.reducer';
 
 @Component({
   selector: 'app-item',
@@ -29,12 +30,11 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
   sub: Subscription;
 
   constructor(private db: AngularFirestore,
-              private as: AuthService,
               private dialog: MatDialog,
               private store: Store<fromRoot.State>) { }
 
   ngOnInit() {
-    this.loggedUser$ = this.as.user$;
+    this.loggedUser$ = this.store.select(getUser);
     if (this.item.owner) {
       this.sub = this.db.doc<Item>(`items/towns/${this.item.town}/${this.item.uid}`).valueChanges()
         .subscribe( (item: Item) => {
@@ -42,7 +42,7 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
         this.owner$ = this.db.collection('users').doc<User>(this.item.owner).valueChanges();
       });
     } else {
-      this.owner$ = this.as.user$;
+      this.owner$ = this.store.select(getUser);
     }
 
     this.swiperConfig = {

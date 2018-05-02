@@ -1,3 +1,4 @@
+import { ChatService } from './../bargains/chat/chat.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/observable';
@@ -9,6 +10,7 @@ import { User } from './../auth/user.model';
 import { AuthService } from './../auth/auth.service';
 import * as fromRoot from '../app.reducer';
 import * as ItemActions from '../item/item.actions';
+import { UnsetUser } from '../auth/auth.actions';
 
 @Component({
   selector: 'app-shell',
@@ -23,19 +25,21 @@ export class ShellComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<fromRoot.State>,
     private authService: AuthService,
+    private chatService: ChatService,
     private afs: AngularFireStorage,
     private router: Router) { }
 
   ngOnInit() {
     this.isAuth$ = this.store.select(fromRoot.getIsAuth);
-    this.userSub = this.authService.user$.subscribe(user => {
+    this.userSub = this.store.select(fromRoot.getUser).subscribe(user => {
       if (user) {
         this.user = user;
         if (user.photoURL !== './assets/img/thumb-anon.jpg') {
           this.photoURL$ = this.afs.ref(`/users/${this.user.uid}/thumb.jpg`).getDownloadURL();
         }
+        this.chatService.getUnreadThreadsCount();
       } else {
-        this.router.navigate(['/auth']);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -43,8 +47,7 @@ export class ShellComponent implements OnInit, OnDestroy {
   onLogout() {
     this.authService.logout()
     .then(_ => {
-      this.store.dispatch(new ItemActions.FetchDataSuccess([]));
-      this.user = null;
+      this.store.dispatch(new ItemActions.ResetState());
     })
     .catch( err => console.log(err));
   }

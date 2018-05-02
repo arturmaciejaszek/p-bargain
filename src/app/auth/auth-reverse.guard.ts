@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, Route } from '@angular/router';
 import { take } from 'rxjs/operators';
+import { skip } from 'rxjs/operators';
 
 import * as fromRoot from '../app.reducer';
 
@@ -10,10 +11,6 @@ export class AuthReverseGuard implements CanActivate {
     constructor(private store: Store<fromRoot.State>) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        return this.store.select(fromRoot.getIsAuth).pipe(take(1)).map( res => !res);
-    }
-
-    canLoad(route: Route) {
-        return this.store.select(fromRoot.getIsAuth).pipe(take(1)).map( res => !res);
+        return this.store.select(fromRoot.getIsAuth).pipe(take(1)).map( res => !res );
     }
 }
