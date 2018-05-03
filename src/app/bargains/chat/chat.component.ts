@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy, QueryList, ViewChildren, AfterViewInit } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/observable';
 import { Subscription } from 'rxjs/Subscription';
 import { take } from 'rxjs/operators';
@@ -22,6 +22,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   recipientUID: string;
   msgs$: Observable<Message[]>;
   sub: Subscription[] = [];
+  bDoc: AngularFirestoreDocument<any>;
 
 
   constructor(private chatService: ChatService, private db: AngularFirestore) { }
@@ -31,31 +32,31 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       if (bargain) {
         this.currentBargain = bargain;
         this.setRecipient(bargain);
-        this.msgs$ = this.db.collection<Message>(`/bargains/${this.currentBargain.uid}/messages`).valueChanges();
+        this.bDoc = this.db.doc(`/bargains/${this.currentBargain.uid}`);
+        this.msgs$ = this.bDoc.collection<Message>('/messages').valueChanges();
       }
     }));
   }
 
   sendMsg(msg: string) {
     this.chatService.sendMsg(this.currentBargain.uid, this.loggedUser.uid, msg)
-      .then(_ => this.db.doc<Bargain>(`/bargains/${this.currentBargain.uid}`)
-                        .update({hasUnread: this.recipientUID}))
+      .then(_ => this.bDoc.update({hasUnread: this.recipientUID}))
       .catch( err => console.log(err));
     this.msgInput.nativeElement.value = '';
   }
 
   seenUpdater() {
-      const unseenMsgs = this.db.collection<Message>(`/bargains/${this.currentBargain.uid}/messages`,
+      const unseenMsgs = this.bDoc.collection<Message>('/messages',
         ref => ref.where('seen', '==', false).where('user', '==', this.recipientUID));
 
       this.sub.push(unseenMsgs.snapshotChanges().subscribe( actions => {
         const createBatch = this.db.firestore.batch();
         actions.forEach( action => {
-          const msgRef = this.db.doc<Message>(`/bargains/${this.currentBargain.uid}/messages/${action.payload.doc.id}`).ref;
+          const msgRef = this.bDoc.collection('messages').doc<Message>(`/${action.payload.doc.id}`).ref;
           createBatch.update(msgRef, {seen: true});
         });
         createBatch.commit()
-          .then(_ => this.db.doc<Bargain>(`/bargains/${this.currentBargain.uid}`).update({hasUnread: null}))
+          .then(_ => this.bDoc.update({hasUnread: null}))
           .catch(err => console.log(err));
       }));
   }

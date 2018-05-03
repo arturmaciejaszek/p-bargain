@@ -1,3 +1,4 @@
+
 .chat__Output {
     height: 300px;
     max-width: 300px;
@@ -14,14 +15,14 @@
 }
 
 .mine {
-    background-color: red;
+    background-color: #f44336;
     color: black;
     align-self: flex-end;
     margin-left: .5rem;
 }
 
 .notMine {
-    background-color: grey;
+    background-color: #bdbdbd;
     color: black;
     align-self: flex-start;
     margin-right: .5rem;
