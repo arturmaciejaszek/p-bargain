@@ -1,3 +1,4 @@
+import { ChatService } from './../chat/chat.service';
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Subscription } from 'rxjs/Subscription';
@@ -18,11 +19,12 @@ export class BargainItemComponent implements OnInit, OnDestroy {
   @Input() expanded: boolean;
   @Input() loggedUser: User;
   @Output() openEmitter: EventEmitter<string> = new EventEmitter<string>();
-  @Output() chatEmitter: EventEmitter<Item> = new EventEmitter<Item>();
   sub: Subscription;
   public unread = 0;
 
-  constructor(private db: AngularFirestore, private store: Store<fromRoot.State>) { }
+  constructor(private db: AngularFirestore,
+    private store: Store<fromRoot.State>,
+    private chatService: ChatService) { }
 
   ngOnInit() {
     this.sub = this.db.collection<Message>(`/bargains/${this.item.uid}/messages`)
@@ -34,11 +36,15 @@ export class BargainItemComponent implements OnInit, OnDestroy {
             this.unread ++;
           }
         });
+        // if (this.unread > 0) {
+        //   this.chatService.updateBargain(this.item.uid, this.loggedUser.uid);
+        //   return;
+        // }
       });
   }
 
   openChat() {
-    this.chatEmitter.emit(this.item);
+    this.chatService.activeChat$.next(this.item);
   }
 
   ngOnDestroy() {

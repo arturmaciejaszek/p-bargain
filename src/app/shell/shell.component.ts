@@ -1,16 +1,18 @@
-import { ChatService } from './../bargains/chat/chat.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/observable';
 import { Subscription } from 'rxjs/Subscription';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { Store } from '@ngrx/store';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { User } from './../auth/user.model';
 import { AuthService } from './../auth/auth.service';
+import { ChatService } from './../bargains/chat/chat.service';
 import * as fromRoot from '../app.reducer';
 import * as ItemActions from '../item/item.actions';
 import { UnsetUser } from '../auth/auth.actions';
+import { Bargain } from '../bargains/bargain.model';
 
 @Component({
   selector: 'app-shell',
@@ -20,6 +22,7 @@ import { UnsetUser } from '../auth/auth.actions';
 export class ShellComponent implements OnInit, OnDestroy {
   isAuth$: Observable<boolean>;
   photoURL$: Observable<string>;
+  unreadCount$: Observable<number>;
   user: User;
   userSub: Subscription;
 
@@ -42,12 +45,14 @@ export class ShellComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
       }
     });
+    this.unreadCount$ = this.store.select(fromRoot.getUnreadThreads);
   }
 
   onLogout() {
     this.authService.logout()
     .then(_ => {
       this.store.dispatch(new ItemActions.ResetState());
+      this.chatService.activeChat$ = new BehaviorSubject<Bargain>(null);
     })
     .catch( err => console.log(err));
   }

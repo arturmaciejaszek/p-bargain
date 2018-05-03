@@ -8,6 +8,7 @@ import { BSorterPipe } from './b-sorter.pipe';
 import { ChatComponent } from './chat/chat.component';
 import { BargainItemComponent } from './bargain-item/bargain-item.component';
 import { FilterPipePipe } from './filter-pipe.pipe';
+import { OrderByPipe } from './chat/order-by.pipe';
 
 @NgModule({
     declarations: [
@@ -16,6 +17,7 @@ import { FilterPipePipe } from './filter-pipe.pipe';
         ChatComponent,
         BargainItemComponent,
         FilterPipePipe,
+        OrderByPipe,
     ],
     imports: [
         SharedModule,

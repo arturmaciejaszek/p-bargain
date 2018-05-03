@@ -14,7 +14,6 @@
       <app-bargain-item 
         [item]="bargain" 
         (openEmitter)="expanded($event)"
-        (chatEmitter)="activeItemChat = $event" 
         [expanded]="bargain.uid === currentlyExpanded"
         [loggedUser]="loggedUser"></app-bargain-item>
     </div>
@@ -23,14 +22,13 @@
       <app-bargain-item 
         [item]="bargain" 
         (openEmitter)="expanded($event)"
-        (chatEmitter)="activeItemChat = $event" 
         [expanded]="bargain.uid === currentlyExpanded"
         [loggedUser]="loggedUser"></app-bargain-item>
     </div>
   </div>
 
   <div class="chat" fxFlex="40">
-    <app-chat [loggedUser]="loggedUser" [activeItem]="activeItemChat"></app-chat>
+    <app-chat [loggedUser]="loggedUser"></app-chat>
   </div>
 
 </div>

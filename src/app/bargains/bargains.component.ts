@@ -20,14 +20,15 @@ export class BargainsComponent implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
   currentlyExpanded: string;
   sub: Subscription;
-  activeItemChat: Item;
 
   constructor(private store: Store<fromItem.State>) { }
 
   ngOnInit() {
     this.sub = this.store.select(getUser).subscribe( (user: User) => {
-      this.loggedUser = user;
-      this.store.dispatch( new ItemActions.FetchData({ownerUID: user.uid, bargains: true}));
+      if (user) {
+        this.loggedUser = user;
+        this.store.dispatch( new ItemActions.FetchData({ownerUID: user.uid, bargains: true}));
+      }
     });
 
     this.loading$ = this.store.select(fromItem.getIsLoading);

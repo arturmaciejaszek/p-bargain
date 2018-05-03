@@ -12,15 +12,20 @@
         [matMenuTriggerFor]="userMenu">
         {{ user?.name }}
         <img [src]="user?.photoURL" alt="Avatar" class="avatar">
+        <span *ngIf="(unreadCount$ | async) > 0" class="notification" 
+          fxLayout="row" fxLayoutAlign="center center">{{ unreadCount$ | async }}</span>
       </button>
       <mat-menu #userMenu="matMenu" overlapTrigger="false">
-        <button mat-menu-item routerLink="/shop" >Shop</button>
-        <button mat-menu-item routerLink="/bargains" >Bargains</button>
-        <button mat-menu-item routerLink="/profile" >Profile</button>
-        <button mat-menu-item (click)="onLogout()">Logout</button>
-      </mat-menu>
-    </div>
-  </mat-toolbar>
+          <button mat-menu-item routerLink="/shop" >Shop</button>
+          <button mat-menu-item routerLink="/bargains" >
+            Bargains 
+            <span *ngIf="(unreadCount$ | async) > 0" class="notification_menu">&nbsp;{{ unreadCount$ | async }}</span>
+          </button>
+          <button mat-menu-item routerLink="/profile" >Profile</button>
+          <button mat-menu-item (click)="onLogout()">Logout</button>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
 
   <!-- THE MAIN APP -->
 <div class="bounds" fxFlex fxLayoutAlign="center center">

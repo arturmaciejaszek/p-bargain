@@ -1,4 +1,4 @@
-import { StoreModule, combineReducers, compose } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { NgModule } from '@angular/core';
 import { SwiperModule } from 'ngx-swiper-wrapper';

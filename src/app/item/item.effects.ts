@@ -4,7 +4,6 @@ import { Action } from '@ngrx/store';
 import { Effect, Actions } from '@ngrx/effects';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore';
 import { Store } from '@ngrx/store';
-import { getUser } from './../app.reducer';
 import * as firebase from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
@@ -17,8 +16,10 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 
 
+import { getUser } from './../app.reducer';
 import { AuthService } from './../auth/auth.service';
 import { Item } from './item.model';
+import { Bargain } from './../bargains/bargain.model';
 import { IgnoredItem } from './ignored-item.model';
 import { User } from './../auth/user.model';
 import { ItemQuery } from './item-query.model';
@@ -152,10 +153,10 @@ export class ItemEffects {
 
     runQuery(query: ItemQuery): Observable<any> {
         if (query.ownerUID && query.bargains) {
-            const itemsSold = this.db.collection<Item>('bargains', ref =>
+            const itemsSold = this.db.collection<Bargain>('bargains', ref =>
                 ref.where('owner', '==', query.ownerUID)
                     .where('status', '==', 'sold')).valueChanges();
-            const itemsBought = this.db.collection<Item>('bargains', ref =>
+            const itemsBought = this.db.collection<Bargain>('bargains', ref =>
                 ref.where('buyer', '==', query.ownerUID)
                     .where('status', '==', 'sold')).valueChanges();
             return zip(itemsBought, itemsSold).map( ([bought, sold]) => [...bought, ...sold]);
