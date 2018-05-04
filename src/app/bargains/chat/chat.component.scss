@@ -1,3 +1,22 @@
+.outline {
+    border: 1px solid #f44336;
+    border-radius: 10px;
+    max-width: 300px;
+    margin-bottom: 1rem;
+    font-weight: bold;
+
+    & > * {
+        padding: .5rem;
+    }
+}
+
+.avatar {
+    object-fit: cover;
+    border-radius:50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: .5rem;
+}
 
 .chat__Output {
     height: 300px;

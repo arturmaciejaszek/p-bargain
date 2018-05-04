@@ -1,4 +1,12 @@
 <div class="chat">
+  <div *ngIf="currentBargain" class="outline" fxLayout="row" fxLayoutAlign="center center">
+    <span>{{ currentBargain?.name }}</span>
+    <span fxFlex></span>
+    <div fxLayoutAlign="center center">
+      <span>{{ recipientName }}</span>
+      <img class="avatar" [src]="recipientPhoto" alt="">
+    </div>
+  </div>
   <div class="chat__Output">
     <div #msgs *ngFor="let message of msgs$ |async |orderBy:'sentAt'; let last = last; let i = index" 
           fxLayout="column">

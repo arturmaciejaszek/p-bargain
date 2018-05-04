@@ -17,9 +17,11 @@ import { ChatService } from './chat.service';
 export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() loggedUser: User;
   @ViewChild('msg') msgInput: ElementRef;
-  @ViewChildren('msgs') msgsList: QueryList<any>;
+  @ViewChildren('msgs') msgsList: QueryList<ElementRef>;
   currentBargain: Bargain;
   recipientUID: string;
+  recipientPhoto: string;
+  recipientName: string;
   msgs$: Observable<Message[]>;
   sub: Subscription[] = [];
   bDoc: AngularFirestoreDocument<any>;
@@ -67,11 +69,21 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.recipientUID = bargain.owner;
     }
+    this.db.collection('users').doc<User>(this.recipientUID)
+    .valueChanges()
+    .pipe(take(1))
+    .subscribe( user => {
+      this.recipientPhoto = user.photoURL;
+      this.recipientName = user.name;
+    } );
   }
 
   ngAfterViewInit() {
     this.sub.push(this.msgsList.changes.subscribe( () => {
       this.seenUpdater();
+      if (this.msgsList.last) {
+        this.msgsList.last.nativeElement.scrollIntoView();
+      }
     }));
   }
 

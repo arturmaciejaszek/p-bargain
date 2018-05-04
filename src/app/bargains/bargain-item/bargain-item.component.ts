@@ -36,10 +36,6 @@ export class BargainItemComponent implements OnInit, OnDestroy {
             this.unread ++;
           }
         });
-        // if (this.unread > 0) {
-        //   this.chatService.updateBargain(this.item.uid, this.loggedUser.uid);
-        //   return;
-        // }
       });
   }
 
