@@ -8,10 +8,12 @@
     </div>
   </div>
   <div class="chat__Output">
-    <div #msgs *ngFor="let message of msgs$ |async |orderBy:'sentAt'; let last = last; let i = index" 
-          fxLayout="column">
-      <span [class]="message.user === loggedUser?.uid ? 'mine' : 'notMine'">{{ message.msg }}</span>
-      <span class="seen" *ngIf="last && message.user === loggedUser?.uid">{{ message.seen ? 'seen' : null }}</span>
+    <div class="msgs_wrapper">
+      <div #msgs *ngFor="let message of msgs$ |async |orderBy:'sentAt'; let last = last; let i = index" 
+            fxLayout="column">
+        <span [class]="message.user === loggedUser?.uid ? 'mine' : 'notMine'">{{ message.msg }}</span>
+        <span class="seen" *ngIf="last && message.user === loggedUser?.uid">{{ message.seen ? 'seen' : null }}</span>
+      </div>
     </div>
   </div>
   <mat-form-field floatLabel="never">

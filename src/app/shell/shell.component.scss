@@ -11,6 +11,7 @@ mat-toolbar {
     position: absolute;
     right: 50%;
     transform: translateX(50%);
+    vertical-align: middle;
 
     &:focus {
         outline: none;
@@ -47,6 +48,7 @@ mat-toolbar {
 .bounds {
     width: 90%;
     margin: auto;
+    position: relative;
 }
 
 app-shell-tabs {

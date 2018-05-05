@@ -17,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { ShellModule } from './shell/shell.module';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { WelcomeModule } from './welcome/welcome.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { WelcomeModule } from './welcome/welcome.module';
     WelcomeModule,
     ShellModule,
     AuthModule,
+    HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireStorageModule,

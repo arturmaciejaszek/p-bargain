@@ -1,0 +1,48 @@
+.logo {
+    width: 25vw;
+    height: 25vh;
+    position: absolute;
+    top: 20%;
+    left: 37%;
+}
+
+
+.stroke, .b1, .b2 {
+    fill: none;
+    stroke: #f44336;
+    stroke-width: 1px;
+}
+
+.stroke {
+    stroke-dasharray: 42; 
+    stroke-dashoffset: 42;
+    
+    animation: move .6s linear;   
+    animation-fill-mode: forwards;
+}
+
+.b1 {
+    stroke-dasharray: 53; 
+    stroke-dashoffset: 53;
+    
+    animation: move .8s linear .6s;   
+    animation-fill-mode: forwards;
+}
+
+.b2 {
+    stroke-dasharray: 70; 
+    stroke-dashoffset: 70;
+    
+    animation: move 1s linear 1.4s;   
+    animation-fill-mode: forwards;
+}
+
+@keyframes move {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+// stroke length: 41.14340591430664
+// b1 length: 52.64304733276367
+// b2 length: 69.89319610595703
