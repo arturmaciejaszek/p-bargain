@@ -1,7 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import "./theme.scss";
-@import "./sass/variables";
 
 html {
     font-size: 62.5%;
@@ -22,7 +19,6 @@ body {
     display: none;
 }
 
-// DEVIANT ME , this removes 'powered by google' which i shouldt actually remove
 .pac-container:after {
     background-image: none !important;
     height: 0px;

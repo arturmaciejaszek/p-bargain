@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column">
   <mat-toolbar color="primary" role="header" class="mat-elevation-z8" fxFlexLayoutAlign="space-between center">    
-    <span class="logo" routerLink="/shop"><mat-icon svgIcon="bargain"></mat-icon>argain</span>
+    <span class="logo" routerLink="/shop" skipLocationChange><mat-icon svgIcon="bargain"></mat-icon>argain</span>
 
     <span fxFlex></span>
 
@@ -16,12 +16,12 @@
           fxLayout="row" fxLayoutAlign="center center">{{ unreadCount$ | async }}</span>
       </button>
       <mat-menu #userMenu="matMenu" overlapTrigger="false">
-          <button mat-menu-item routerLink="/shop" >Shop</button>
-          <button mat-menu-item routerLink="/bargains" >
+          <button mat-menu-item routerLink="/shop" skipLocationChange>Shop</button>
+          <button mat-menu-item routerLink="/bargains" skipLocationChange>
             Bargains 
             <span *ngIf="(unreadCount$ | async) > 0" class="notification_menu">&nbsp;{{ unreadCount$ | async }}</span>
           </button>
-          <button mat-menu-item routerLink="/profile" >Profile</button>
+          <button mat-menu-item routerLink="/profile" skipLocationChange>Profile</button>
           <button mat-menu-item (click)="onLogout()">Logout</button>
         </mat-menu>
       </div>

@@ -83,7 +83,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sub.push(this.msgsList.changes.subscribe( () => {
       this.seenUpdater();
       if (this.msgsList.last) {
-        this.msgsList.last.nativeElement.scrollIntoView();
+        this.msgsList.last.nativeElement.scrollIntoView({block: 'nearest'});
       }
     }));
   }

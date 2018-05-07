@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { MatDialog, MatTableDataSource } from '@angular/material';
@@ -10,6 +11,7 @@ import {} from '@types/googlemaps';
 import * as fromItem from '../item/item.reducer';
 import * as ItemActions from '../item/item.actions';
 
+import { ChatService } from './../bargains/chat/chat.service';
 import { PromptComponent } from './../shared/prompt/prompt.component';
 import { CropComponent } from './crop/crop.component';
 import { AuthService } from '../auth/auth.service';
@@ -33,7 +35,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
   constructor(private authService: AuthService,
               private store: Store<fromItem.State>,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private router: Router,
+              private chatService: ChatService) { }
 
   ngOnInit() {
     this.isLoading$ = this.store.select(getIsLoading);
@@ -87,6 +91,11 @@ export class UserComponent implements OnInit, OnDestroy {
         this.store.dispatch( new ItemActions.DeleteItem(item));
       }
     });
+  }
+
+  openBargain(item: Item) {
+    this.chatService.activeChat$.next(item);
+    this.router.navigate([`/bargains`], { skipLocationChange: true });
   }
 
   ngOnDestroy() {
