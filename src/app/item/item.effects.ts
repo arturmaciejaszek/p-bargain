@@ -16,6 +16,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 
 
+import { ErrorHandler } from './../shared/error-snackbar.service';
 import { getUser } from './../app.reducer';
 import { AuthService } from './../auth/auth.service';
 import { Item } from './item.model';
@@ -35,7 +36,8 @@ export class ItemEffects {
   constructor(private actions: Actions,
                 private db: AngularFirestore,
                 private loc: Location,
-                private store: Store<fromRoot.State>) {
+                private store: Store<fromRoot.State>,
+                private errorHandler: ErrorHandler) {
 
   }
 
@@ -66,7 +68,7 @@ export class ItemEffects {
                 }
             }),
             catchError( err => {
-                return of(new ItemActions.CallFailure());
+                return of(new ItemActions.CallFailure(err));
             })
         );
 
@@ -75,10 +77,10 @@ export class ItemEffects {
         .map( (action: ItemActions.DeleteItem) => action.payload )
         .mergeMap( (item: Item) => of(this.batchDelete(item)) )
         .map( res => {
-            return new ItemActions.CallSuccess();
+            return new ItemActions.CallSuccess('success');
         })
         .catch( err => {
-           return of( new ItemActions.CallFailure());
+           return of( new ItemActions.CallFailure('error'));
         });
 
     @Effect()
@@ -87,24 +89,32 @@ export class ItemEffects {
         .mergeMap( (item: Item) => of(this.batchCreate(item)) )
         .map( res => {
             res.then( resolve => this.loc.back());
-            return new ItemActions.CallSuccess();
+            return new ItemActions.CallSuccess('success');
         })
         .catch( err => {
-            return of( new ItemActions.CallFailure());
+            return of( new ItemActions.CallFailure('error'));
         });
 
-        // ADD IGNORE ACTION TO BUY EFFECT
     @Effect()
     buyItem: Observable<Action> = this.actions.ofType(ItemActions.BUY_ITEM)
         .map( (action: ItemActions.BuyItem) => action.payload )
         .mergeMap( (data: {uid: string, changes: Partial<Item>}) => of(this.batchOnBuy(data)))
         .map( res => {
-            return new ItemActions.CallSuccess();
+            return new ItemActions.CallSuccess('success');
         })
         .catch( err => {
-           return of( new ItemActions.CallFailure());
+           return of( new ItemActions.CallFailure('error'));
         });
 
+    @Effect({dispatch: false})
+    callSuccess: Observable<Action> = this.actions.ofType(ItemActions.CALL_SUCCESS)
+        .map( (action: ItemActions.CallSuccess) => action.payload )
+        .do( res => this.errorHandler.show(res, null));
+
+    @Effect({dispatch: false})
+    callFailure: Observable<Action> = this.actions.ofType(ItemActions.CALL_FAILURE)
+        .map( (action: ItemActions.CallFailure) => action.payload )
+        .do( res => this.errorHandler.show(res, null));
 
     batchCreate(item: Item) {
         const createBatch = this.db.firestore.batch();

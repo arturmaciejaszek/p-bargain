@@ -14,7 +14,8 @@
           <button mat-raised-button color="accent" (click)="ignore(item)">X</button>
         </div>
       </div>
-      <div class="noitems" *ngIf="(data$|async)?.length < 1">Sorry, not a single item meets your criteria</div>
+      <div class="noitems" *ngIf="(data$|async)?.length < 1 && userTown">Sorry, not a single item meets your criteria</div>
+      <div class="noitems" *ngIf="(data$|async)?.length < 1 && !userTown">Please select a town to start</div>
     </div>
   </mat-drawer-content>
 

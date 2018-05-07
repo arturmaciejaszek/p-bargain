@@ -10,6 +10,7 @@ import * as fromRoot from '../app.reducer';
 import { StartLoading, StopLoading } from './../shared/ui.actions';
 import { SetUser, UnsetUser } from './auth.actions';
 
+import { ErrorHandler } from './../shared/error-snackbar.service';
 import { User } from './user.model';
 import { AuthData } from './auth-data.model';
 
@@ -19,7 +20,8 @@ export class AuthService {
     constructor(private af: AngularFireAuth,
         private db: AngularFirestore,
         private store: Store<fromRoot.State>,
-        private router: Router) {
+        private router: Router,
+        private errorHandler: ErrorHandler) {
 
             this.af.authState.subscribe( user => {
                 if (user) {
@@ -42,7 +44,7 @@ export class AuthService {
                 this.router.navigate(['/profile']);
             })
             .catch( err => {
-                console.log(err);
+                this.errorHandler.show('failed to register', null);
                 this.store.dispatch(new StopLoading());
             });
     }
@@ -51,11 +53,11 @@ export class AuthService {
         this.store.dispatch(new StartLoading());
         this.af.auth.signInWithEmailAndPassword(authData.email, authData.password)
             .then( user => {
-                this.store.dispatch(new StopLoading());
+                // this.store.dispatch(new StopLoading());
                 this.router.navigate(['/shop']);
             })
             .catch( err => {
-                console.log(err);
+                this.errorHandler.show('invalid credentials', null);
                 this.store.dispatch(new StopLoading());
             });
     }

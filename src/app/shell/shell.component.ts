@@ -13,6 +13,7 @@ import * as fromRoot from '../app.reducer';
 import * as ItemActions from '../item/item.actions';
 import { UnsetUser } from '../auth/auth.actions';
 import { Bargain } from '../bargains/bargain.model';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-shell',
@@ -20,7 +21,6 @@ import { Bargain } from '../bargains/bargain.model';
   styleUrls: ['./shell.component.scss']
 })
 export class ShellComponent implements OnInit, OnDestroy {
-  isAuth$: Observable<boolean>;
   photoURL$: Observable<string>;
   unreadCount$: Observable<number>;
   user: User;
@@ -30,10 +30,10 @@ export class ShellComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private chatService: ChatService,
     private afs: AngularFireStorage,
-    private router: Router) { }
+    private router: Router,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit() {
-    this.isAuth$ = this.store.select(fromRoot.getIsAuth);
     this.userSub = this.store.select(fromRoot.getUser).subscribe(user => {
       if (user) {
         this.user = user;
@@ -51,10 +51,11 @@ export class ShellComponent implements OnInit, OnDestroy {
   onLogout() {
     this.authService.logout()
     .then(_ => {
+      this.user = null;
       this.store.dispatch(new ItemActions.ResetState());
       this.chatService.activeChat$ = new BehaviorSubject<Bargain>(null);
     })
-    .catch( err => console.log(err));
+    .catch( err => this.snackBar.open('failed logging out', null));
   }
 
   ngOnDestroy() {

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/co
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { MatDialog, MatTableDataSource } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import {} from '@types/googlemaps';
@@ -14,7 +15,7 @@ import { CropComponent } from './crop/crop.component';
 import { AuthService } from '../auth/auth.service';
 import { User } from './../auth/user.model';
 import { Item } from './../item/item.model';
-import { getUser } from '../app.reducer';
+import { getUser, getIsLoading } from '../app.reducer';
 
 @Component({
   selector: 'app-user',
@@ -23,6 +24,7 @@ import { getUser } from '../app.reducer';
 })
 export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('townInput') townInput: ElementRef;
+  isLoading$: Observable<boolean>;
   user: User;
   sub: Subscription[] = [];
   townControl: FormControl;
@@ -34,6 +36,8 @@ export class UserComponent implements OnInit, OnDestroy {
               private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.isLoading$ = this.store.select(getIsLoading);
+
     this.sub.push(this.store.select(getUser).subscribe( (user: User) => {
       if (user && user.uid) {
         this.user = user;

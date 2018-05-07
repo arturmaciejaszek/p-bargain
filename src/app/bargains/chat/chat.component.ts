@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/observable';
 import { Subscription } from 'rxjs/Subscription';
 import { take } from 'rxjs/operators';
 
+import { ErrorHandler } from './../../shared/error-snackbar.service';
 import { User } from '../../auth/user.model';
 import { Bargain } from './../bargain.model';
 import { Message } from './message.model';
@@ -27,7 +28,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   bDoc: AngularFirestoreDocument<any>;
 
 
-  constructor(private chatService: ChatService, private db: AngularFirestore) { }
+  constructor(private chatService: ChatService, private db: AngularFirestore, private errorHandler: ErrorHandler) { }
 
   ngOnInit() {
     this.sub.push(this.chatService.activeChat$.subscribe( (bargain: Bargain) => {
@@ -43,7 +44,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   sendMsg(msg: string) {
     this.chatService.sendMsg(this.currentBargain.uid, this.loggedUser.uid, msg)
       .then(_ => this.bDoc.update({hasUnread: this.recipientUID}))
-      .catch( err => console.log(err));
+      .catch( err => this.errorHandler.show('failed to send a message', null));
     this.msgInput.nativeElement.value = '';
   }
 
@@ -59,7 +60,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         createBatch.commit()
           .then(_ => this.bDoc.update({hasUnread: null}))
-          .catch(err => console.log(err));
+          .catch(err => this.errorHandler.show('failed to update messages', null));
       }));
   }
 

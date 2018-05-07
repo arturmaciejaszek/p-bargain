@@ -4,9 +4,9 @@
 
     <span fxFlex></span>
 
-    <mat-spinner *ngIf="(isAuth$ | async) && !(photoURL$ | async)" diameter="20" color="accent"></mat-spinner>
+    <mat-spinner *ngIf="user && !(photoURL$|async)" diameter="20" color="accent"></mat-spinner>
 
-    <div *ngIf="(isAuth$ | async) && user?.photoURL !== null">
+    <div *ngIf="user">
       <button  
         mat-button 
         [matMenuTriggerFor]="userMenu">
@@ -34,6 +34,10 @@
 
 </div>
 
-<footer>
-  FOOTER BELOW THE MAIN WINDOW
+<footer fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="myself" fxLayout="row" fxLayoutAlign="center center">
+    <img src="./assets/img/am.png" alt="">
+    <p>Made by myself to showcase my abilities</p>
+  </div>
+  <a href="https://github.com/arturmaciejaszek/p-bargain">GitHub Code</a>
 </footer>

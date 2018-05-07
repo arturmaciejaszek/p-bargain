@@ -4,6 +4,7 @@ import { AngularFireStorage, AngularFireUploadTask } from 'angularfire2/storage'
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { take } from 'rxjs/operators';
 
+import { ErrorHandler } from './../../shared/error-snackbar.service';
 @Component({
   selector: 'app-dropzone',
   templateUrl: './dropzone.component.html',
@@ -18,7 +19,10 @@ export class DropzoneComponent implements OnInit {
   isHovering: boolean;
   task: AngularFireUploadTask;
 
-  constructor(private afs: AngularFireStorage, private db: AngularFirestore, private resizer: Ng2ImgMaxService) { }
+  constructor(private afs: AngularFireStorage,
+    private db: AngularFirestore,
+    private resizer: Ng2ImgMaxService,
+    private errorHandler: ErrorHandler) { }
 
   ngOnInit() {
   }
@@ -42,7 +46,7 @@ export class DropzoneComponent implements OnInit {
           this.photoLinkEmitter.emit(res.downloadURL);
           this.task = null;
         })
-      .catch( err => console.log(err));
+      .catch( err => this.errorHandler.show('failed to upload', null));
 
     });
 

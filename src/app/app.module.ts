@@ -15,9 +15,9 @@ import { AuthService } from './auth/auth.service';
 import { ChatService } from './bargains/chat/chat.service';
 import { SharedModule } from './shared/shared.module';
 import { ShellModule } from './shell/shell.module';
-import { WelcomeComponent } from './welcome/welcome.component';
 import { WelcomeModule } from './welcome/welcome.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ErrorHandler } from './shared/error-snackbar.service';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,7 @@ import { HttpClientModule } from '@angular/common/http';
       logOnly: environment.production
     })
   ],
-  providers: [AuthService, ChatService],
+  providers: [AuthService, ChatService, ErrorHandler],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { ImageCropperComponent, CropperSettings } from 'ng2-img-cropper';
 
+import { ErrorHandler } from './../../shared/error-snackbar.service';
 @Component({
   selector: 'app-crop',
   templateUrl: './crop.component.html',
@@ -21,7 +22,8 @@ export class CropComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) private passedData: { file: File, uid: string },
     private dialogRef: MatDialogRef<CropComponent>,
     private afs: AngularFireStorage,
-    private authService: AuthService) {
+    private authService: AuthService,
+    private errorHandler: ErrorHandler) {
 
     this.cropperSettings = new CropperSettings();
         this.cropperSettings.noFileInput = true;
@@ -59,13 +61,13 @@ export class CropComponent implements OnInit {
     this.uploadPercent = task.percentageChanges();
 
     task.then( res => this.updatePhoto(res.downloadURL))
-      .catch( err => console.log(err));
+      .catch( err => this.errorHandler.show(err.msg, null));
   }
 
   updatePhoto(photoURL: string) {
     this.authService.updateData(this.passedData.uid, {photoURL: photoURL})
       .then(_ => this.dialogRef.close())
-      .catch( err => console.log(err));
+      .catch( err => this.errorHandler.show(err.msg, null));
   }
 
   convertToBlob(base64Str: string): Blob {

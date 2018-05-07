@@ -3,7 +3,8 @@
 
     <h4>Your items</h4>
 
-    <mat-table #table [dataSource]="userItems" [trackBy]="trackByFn">
+    <mat-spinner *ngIf="isLoading$|async"></mat-spinner>
+    <mat-table *ngIf="!(isLoading$|async)" #table [dataSource]="userItems" [trackBy]="trackByFn">
 
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
@@ -43,13 +44,15 @@
 
   <div class="right" fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between">
 
-    <div>
+    <!-- GOT RID OF IT FOR NOW -->
+    <span fxFlex></span>
+    <!-- <div>
       <h4>Stars Rank</h4>
       <div fxLayout="row" fxLayoutAlign="end center">
         <span>{{ user?.rank }} </span>
         <img class="star" src="./assets/img/star.svg" alt="star icon">
       </div>
-    </div>
+    </div> -->
 
     <div fxLayout="column">
       <h5>Settings</h5>
@@ -58,8 +61,6 @@
         <input matInput placeholder="Town" #townInput [formControl]="townControl" [value]="user?.town">
       </mat-form-field>
 
-
-      <!-- FAST BUY MEANS THAT THERE WILL BE NO CONFIRMATION PROMPT ON BUYIN -->
       <mat-radio-group (change)="updateFastBuy($event)" [value]="user?.fastBuy">
         <mat-radio-button color="primary" [value]='true' >Fast Buy</mat-radio-button>
         <mat-radio-button color="primary" [value]='false' >Careful Buy</mat-radio-button>

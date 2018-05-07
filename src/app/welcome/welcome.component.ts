@@ -16,12 +16,10 @@ export class WelcomeComponent implements OnInit {
 
   ngOnInit() {
     this.store.select(getIsAuth).subscribe( auth => {
-      const timeout = setTimeout(() => this.router.navigate(['/auth']), 2500);
+      const timeout = setTimeout(() => this.router.navigate(['/auth']), 2600);
       if (auth) {
         clearTimeout(timeout);
         this.router.navigate(['/shop']);
-      } else {
-        // this.router.navigate(['/auth']);
       }
     });
   }

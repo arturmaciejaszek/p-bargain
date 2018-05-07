@@ -53,6 +53,7 @@ export class ShopComponent implements OnInit, OnDestroy {
   data$: Observable<Item[]>;
   ignoredList: string[] = [];
   userUID: string;
+  userTown: string;
   sub: Subscription[] = [];
 
   constructor(private store: Store<fromItem.State>,
@@ -62,6 +63,7 @@ export class ShopComponent implements OnInit, OnDestroy {
     this.sub.push(this.store.select(getUser).pipe(take(1)).subscribe( user => {
       if (user) {
         this.userUID = user.uid;
+        this.userTown = user.town;
         this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
           .valueChanges().subscribe( (list: {list: string[]}) => {
             if (list) {
