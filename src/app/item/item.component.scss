@@ -21,22 +21,21 @@ mat-card {
 }
 
 .photos {
-    height: calc(70vh * 0.6);
-    width: calc(70vh * 0.6);
-    // overflow: hidden !important;
-
-    // & > img {
-    //     height: 100%;
-    //     width: 100%;
-    //     object-fit: cover;
-    // }
+    height: auto;
+    width:  calc(70vh * 0.6);
+    overflow: hidden;
 }
 
-@media (min-width: 1025px) and (max-width: 1280px) {
-    .photos {
-        overflow: hidden !important;
-    }
+.photo {
+    max-height: calc(70vh * 0.6) !important;
+    align-self: center;
 }
+
+// @media (min-width: 1025px) and (max-width: 1280px) {
+//     .photos {
+//         overflow: hidden !important;
+//     }
+// }
 
 mat-card-header {
     width: 100%;

@@ -14,5 +14,9 @@ export class AppComponent {
       'bargain',
       this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/img/bargain.svg')
     );
+    this.matIconRegistry.addSvgIcon(
+      'github',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('./assets/img/github.svg')
+    );
   }
 }

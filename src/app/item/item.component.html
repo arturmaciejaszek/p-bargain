@@ -13,7 +13,7 @@
     </div>
   </mat-card-header>
   <swiper class="photos" [config]="swiperConfig">
-    <img *ngFor="let photo of item?.photos" [src]="photo" alt="">
+    <img class="photo" *ngFor="let photo of item?.photos" [src]="photo" alt="">
   </swiper>
   <mat-card-content>
     <p>

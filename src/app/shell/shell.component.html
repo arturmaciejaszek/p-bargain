@@ -4,7 +4,7 @@
 
     <span fxFlex></span>
 
-    <mat-spinner *ngIf="user && !(photoURL$|async)" diameter="20" color="accent"></mat-spinner>
+    <mat-spinner *ngIf="user && !(photoURL$|async) && user.photoURL !== './assets/img/thumb-anon.jpg'" diameter="20" color="accent"></mat-spinner>
 
     <div *ngIf="user">
       <button  
@@ -37,7 +37,12 @@
 <footer fxLayout="row" fxLayoutAlign="space-between center">
   <div class="myself" fxLayout="row" fxLayoutAlign="center center">
     <img src="./assets/img/am.png" alt="">
-    <p>Made by myself to showcase my abilities</p>
+    <span class="footer_text">Made by myself to showcase my abilities</span>
   </div>
-  <a href="https://github.com/arturmaciejaszek/p-bargain">GitHub Code</a>
+  <div fxLaoutAlign="center center">
+      <a mat-button href="https://github.com/arturmaciejaszek/p-bargain">
+        <mat-icon svgIcon="github"></mat-icon>
+        <span class="footer_text">Code</span>
+      </a>
+  </div>
 </footer>
