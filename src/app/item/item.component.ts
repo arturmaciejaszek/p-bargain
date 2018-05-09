@@ -29,18 +29,25 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
   swiperConfig: SwiperConfigInterface;
   sub: Subscription;
 
-  constructor(private db: AngularFirestore,
-              private dialog: MatDialog,
-              private store: Store<fromRoot.State>) { }
+  constructor(
+    private db: AngularFirestore,
+    private dialog: MatDialog,
+    private store: Store<fromRoot.State>
+  ) {}
 
   ngOnInit() {
     this.loggedUser$ = this.store.select(getUser);
     if (this.item.owner) {
-      this.sub = this.db.doc<Item>(`items/towns/${this.item.town}/${this.item.uid}`).valueChanges()
-        .subscribe( (item: Item) => {
-        this.item = item;
-        this.owner$ = this.db.collection('users').doc<User>(this.item.owner).valueChanges();
-      });
+      this.sub = this.db
+        .doc<Item>(`items/towns/${this.item.town}/${this.item.uid}`)
+        .valueChanges()
+        .subscribe((item: Item) => {
+          this.item = item;
+          this.owner$ = this.db
+            .collection('users')
+            .doc<User>(this.item.owner)
+            .valueChanges();
+        });
     } else {
       this.owner$ = this.store.select(getUser);
     }
@@ -49,56 +56,67 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
       slidesPerView: 1,
       keyboard: true,
       mousewheel: true,
-      scrollbar: true,
+      scrollbar: true
     };
-
   }
 
   buy() {
     let fastbuy: boolean;
     let loggedUserUID: string;
-    this.loggedUser$.pipe(take(1)).subscribe( res => {
+    this.loggedUser$.pipe(take(1)).subscribe(res => {
       fastbuy = res.fastBuy;
       loggedUserUID = res.uid;
 
       if (fastbuy === true) {
-        this.store.dispatch( new ItemActions.BuyItem({
-          uid: this.item.uid,
-          changes: {
-            ...this.item,
-            buyer: loggedUserUID,
-            sold: new Date(),
-            status: 'sold'
-          }
-        }));
+        this.store.dispatch(
+          new ItemActions.BuyItem({
+            uid: this.item.uid,
+            changes: {
+              ...this.item,
+              buyer: loggedUserUID,
+              sold: new Date(),
+              status: 'sold'
+            }
+          })
+        );
       } else {
-        const dialogRef = this.dialog.open(PromptComponent, {hasBackdrop: false});
-
-        dialogRef.afterClosed().pipe(take(1)).subscribe( ref => {
-          if (ref) {
-            this.store.dispatch( new ItemActions.BuyItem({
-              uid: this.item.uid,
-              changes: {
-                ...this.item,
-                buyer: loggedUserUID,
-                sold: new Date(),
-                status: 'sold'
-                }
-            }));
-          }
+        const dialogRef = this.dialog.open(PromptComponent, {
+          hasBackdrop: false
         });
+
+        dialogRef
+          .afterClosed()
+          .pipe(take(1))
+          .subscribe(ref => {
+            if (ref) {
+              this.store.dispatch(
+                new ItemActions.BuyItem({
+                  uid: this.item.uid,
+                  changes: {
+                    ...this.item,
+                    buyer: loggedUserUID,
+                    sold: new Date(),
+                    status: 'sold'
+                  }
+                })
+              );
+            }
+          });
       }
     });
   }
 
   delete() {
-    const dialogRef = this.dialog.open(PromptComponent, {hasBackdrop: false});
+    const dialogRef = this.dialog.open(PromptComponent, { hasBackdrop: false });
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe( res => {
-      if (res) {
-        this.store.dispatch( new ItemActions.DeleteItem(this.item));
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(res => {
+        if (res) {
+          this.store.dispatch(new ItemActions.DeleteItem(this.item));
+        }
+      });
   }
 
   ngOnChanges() {
@@ -112,5 +130,4 @@ export class ItemComponent implements OnInit, OnDestroy, OnChanges {
       this.sub.unsubscribe();
     }
   }
-
 }

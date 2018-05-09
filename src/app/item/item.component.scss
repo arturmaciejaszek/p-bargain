@@ -22,7 +22,7 @@ mat-card {
 
 .photos {
     height: auto;
-    width:  calc(70vh * 0.6);
+    width: calc(70vh * 0.6);
     overflow: hidden;
 }
 
@@ -30,12 +30,6 @@ mat-card {
     max-height: calc(70vh * 0.6) !important;
     align-self: center;
 }
-
-// @media (min-width: 1025px) and (max-width: 1280px) {
-//     .photos {
-//         overflow: hidden !important;
-//     }
-// }
 
 mat-card-header {
     width: 100%;

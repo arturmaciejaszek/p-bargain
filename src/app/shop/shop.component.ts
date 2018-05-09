@@ -1,6 +1,7 @@
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { trigger, state, style, transition, animate, keyframes, group } from '@angular/animations';
+import { ObservableMedia, MediaChange } from '@angular/flex-layout';
 import { Observable } from 'rxjs/observable';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
@@ -52,14 +53,23 @@ export class ShopComponent implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
   data$: Observable<Item[]>;
   ignoredList: string[] = [];
+  drawerMode = 'side';
   userUID: string;
   userTown: string;
   sub: Subscription[] = [];
 
   constructor(private store: Store<fromItem.State>,
-              private db: AngularFirestore) { }
+              private db: AngularFirestore,
+              private mediaQueries: ObservableMedia) { }
 
   ngOnInit() {
+    this.sub.push(this.mediaQueries.subscribe( (media: MediaChange) => {
+      if (media.mediaQuery === '(min-width: 0px) and (max-width: 599px)') {
+        this.drawerMode = 'push';
+      } else {
+        this.drawerMode = 'side';
+      }
+    }));
     this.sub.push(this.store.select(getUser).pipe(take(1)).subscribe( user => {
       if (user) {
         this.userUID = user.uid;

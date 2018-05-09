@@ -1,21 +1,23 @@
 
 <mat-drawer-container fxLayout="row" fxLayoutAlign="space-between center" class="wrapper">
-  <mat-drawer #drawer mode="side">  
+  <mat-drawer #drawer [mode]="drawerMode">
     <app-filter></app-filter>
   </mat-drawer>
 
-  <mat-drawer-content fxFlex>
+  <mat-drawer-content fxFlex >
     <button type="button" mat-button (click)="drawer.toggle()">Filter</button>
-    <mat-spinner *ngIf="(loading$|async)"></mat-spinner>
-    <div *ngIf="!(loading$|async)">
-      <div *ngFor="let item of data$|async; let i = index" fxLayoutAlign="center center">
-        <div *ngIf="i === 0" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
-          <app-item [@animate] [item]="item"></app-item>
-          <button mat-raised-button color="accent" (click)="ignore(item)">X</button>
+    <div class="helper" fxLayoutAlign="center center">
+      <mat-spinner *ngIf="(loading$|async)"></mat-spinner>
+      <div *ngIf="!(loading$|async)">
+        <div *ngFor="let item of data$|async; let i = index" fxLayoutAlign="center center">
+          <div *ngIf="i === 0" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
+            <app-item [@animate] [item]="item"></app-item>
+            <button mat-raised-button color="accent" (click)="ignore(item)">X</button>
+          </div>
         </div>
+        <div *ngIf="(data$|async)?.length < 1 && userTown">Sorry, not a single item meets your criteria</div>
+        <div *ngIf="(data$|async)?.length < 1 && !userTown">Click filter and select a town to start</div>
       </div>
-      <div class="noitems" *ngIf="(data$|async)?.length < 1 && userTown">Sorry, not a single item meets your criteria</div>
-      <div class="noitems" *ngIf="(data$|async)?.length < 1 && !userTown">Please select a town to start</div>
     </div>
   </mat-drawer-content>
 

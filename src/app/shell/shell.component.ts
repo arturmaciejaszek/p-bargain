@@ -26,19 +26,23 @@ export class ShellComponent implements OnInit, OnDestroy {
   user: User;
   userSub: Subscription;
 
-  constructor(private store: Store<fromRoot.State>,
+  constructor(
+    private store: Store<fromRoot.State>,
     private authService: AuthService,
     private chatService: ChatService,
     private afs: AngularFireStorage,
     private router: Router,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.userSub = this.store.select(fromRoot.getUser).subscribe(user => {
       if (user) {
         this.user = user;
         if (user.photoURL !== './assets/img/thumb-anon.jpg') {
-          this.photoURL$ = this.afs.ref(`/users/${this.user.uid}/thumb.jpg`).getDownloadURL();
+          this.photoURL$ = this.afs
+            .ref(`/users/${this.user.uid}/thumb.jpg`)
+            .getDownloadURL();
         }
         this.chatService.getUnreadThreadsCount();
       } else {
@@ -49,17 +53,17 @@ export class ShellComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    this.authService.logout()
-    .then(_ => {
-      this.user = null;
-      this.store.dispatch(new ItemActions.ResetState());
-      this.chatService.activeChat$ = new BehaviorSubject<Bargain>(null);
-    })
-    .catch( err => this.snackBar.open('failed logging out', null));
+    this.authService
+      .logout()
+      .then(_ => {
+        this.user = null;
+        this.store.dispatch(new ItemActions.ResetState());
+        this.chatService.activeChat$ = new BehaviorSubject<Bargain>(null);
+      })
+      .catch(err => this.snackBar.open('failed logging out', null));
   }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();
   }
-
 }

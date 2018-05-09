@@ -1,22 +1,25 @@
-<div fxLayout="column">
-  <h3>Filter by</h3>
+<div fxLayout="column" class="filter">
+  <span>
+    <h3 cdk-focus-initial>Filter by</h3>
+  </span>
 
-  <mat-form-field fxFlexAlign="end">
-    <input matInput 
-    placeholder="Town" 
-    #townInput 
-    [formControl]="townControl" 
-    [value]="selectedTown" >
-  </mat-form-field>
+  <span fxLayout="column" fxLayout.lt-sm="row" fxLayoutGap.lt-sm="10px" fxLayoutAlign.lt-sm="space-around center">
+    <mat-form-field fxFlexAlign="end">
+      <input matInput 
+      placeholder="Town" 
+      #townInput 
+      [formControl]="townControl" 
+      [value]="selectedTown" >
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-select placeholder="Category" (change)="switchCategory($event)">
-      <mat-option value="">---</mat-option>
-      <mat-option *ngFor="let cat of categories" [value]="cat">
-        {{ cat }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
+    <mat-form-field>
+      <mat-select placeholder="Category" (change)="switchCategory($event)">
+        <mat-option value="">---</mat-option>
+        <mat-option *ngFor="let cat of categories" [value]="cat">
+          {{ cat }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </span>
 </div>
   

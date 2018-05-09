@@ -7,10 +7,10 @@
     <mat-spinner *ngIf="user && !(photoURL$|async) && user.photoURL !== './assets/img/thumb-anon.jpg'" diameter="20" color="accent"></mat-spinner>
 
     <div *ngIf="user">
-      <button  
+      <button fxLayoutAlign.lt-sm="end center"
         mat-button 
         [matMenuTriggerFor]="userMenu">
-        {{ user?.name }}
+        <span fxHide.lt-sm>{{ user?.name }}</span>
         <img [src]="user?.photoURL" alt="Avatar" class="avatar">
         <span *ngIf="(unreadCount$ | async) > 0" class="notification" 
           fxLayout="row" fxLayoutAlign="center center">{{ unreadCount$ | async }}</span>
@@ -37,7 +37,7 @@
 <footer fxLayout="row" fxLayoutAlign="space-between center">
   <div class="myself" fxLayout="row" fxLayoutAlign="center center">
     <img src="./assets/img/am.png" alt="">
-    <span class="footer_text">Made by myself to showcase my abilities</span>
+    <span class="footer_text">Made to showcase my Angular abilities</span>
   </div>
   <div fxLaoutAlign="center center">
       <a mat-button href="https://github.com/arturmaciejaszek/p-bargain">

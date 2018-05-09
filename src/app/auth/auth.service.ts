@@ -41,7 +41,6 @@ export class AuthService {
             .then( user => {
                 this.setData(user, name);
                 this.store.dispatch(new StopLoading());
-                this.router.navigate(['/profile'], { skipLocationChange: true });
             })
             .catch( err => {
                 this.errorHandler.show('failed to register', null);
@@ -54,7 +53,7 @@ export class AuthService {
         this.af.auth.signInWithEmailAndPassword(authData.email, authData.password)
             .then( user => {
                 // this.store.dispatch(new StopLoading());
-                this.router.navigate(['/shop'], { skipLocationChange: true });
+                // this.router.navigate(['/shop'], { skipLocationChange: true });
             })
             .catch( err => {
                 this.errorHandler.show('invalid credentials', null);

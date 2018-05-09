@@ -5,9 +5,20 @@
     background-color: white;
 }
 
-mat-spinner, .noitems {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%);
+.helper {
+    height: 90%;
+}
+
+@media screen and (max-width: 599px) {
+    .mat-drawer {
+        transform: translate3d(0, -100%, 0);
+        width: 100vw;
+        height: auto;
+        bottom: initial;
+    }
+
+    .mat-drawer-content {
+        margin: 0 !important;
+    }
+
 }

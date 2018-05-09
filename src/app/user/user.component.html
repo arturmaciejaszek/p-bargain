@@ -28,7 +28,7 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>    
 
-    <button mat-raised-button color="primary" routerLink="/add">Add Item</button>
+    <button mat-raised-button color="primary" routerLink="/add" skipLocationChange>Add Item</button>
   </div>
 
   <div class="middle" fxFlex="25%">
