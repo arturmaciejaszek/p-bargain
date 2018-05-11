@@ -1,5 +1,26 @@
+@import '../../sass/_mixins.scss';
+
 .bargains-wrapper {
+  width: 90vw;
+  height: 80vh;
+  margin: auto;
+}
+
+.bargains {
+  @include respond(xs) {
     width: 90vw;
-    height: 80vh;
-    margin: auto;
+
+    & > p {
+      text-align: center;
+    }
+  }
+
+  & > .restricter {
+    max-height: 15rem;
+    overflow: auto;
+  }
+}
+
+mat-form-field {
+  width: 100%;
 }

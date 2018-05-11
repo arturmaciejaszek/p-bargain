@@ -1,8 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import { MatDialog, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
@@ -26,6 +32,8 @@ import { getUser, getIsLoading } from '../app.reducer';
 })
 export class UserComponent implements OnInit, OnDestroy {
   @ViewChild('townInput') townInput: ElementRef;
+  @ViewChild('paginator') tablePaginator: MatPaginator;
+  @ViewChild('height') tableHeight: ElementRef;
   isLoading$: Observable<boolean>;
   user: User;
   sub: Subscription[] = [];
@@ -33,35 +41,59 @@ export class UserComponent implements OnInit, OnDestroy {
   userItems = new MatTableDataSource<Item>();
   displayedColumns = ['name', 'price', 'action'];
 
-  constructor(private authService: AuthService,
-              private store: Store<fromItem.State>,
-              private dialog: MatDialog,
-              private router: Router,
-              private chatService: ChatService) { }
+  constructor(
+    private authService: AuthService,
+    private store: Store<fromItem.State>,
+    private dialog: MatDialog,
+    private router: Router,
+    private chatService: ChatService
+  ) {}
 
   ngOnInit() {
     this.isLoading$ = this.store.select(getIsLoading);
 
-    this.sub.push(this.store.select(getUser).subscribe( (user: User) => {
-      if (user && user.uid) {
-        this.user = user;
-        this.getUserItems();
-      }
-    }));
+    this.sub.push(
+      this.store.select(getUser).subscribe((user: User) => {
+        if (user && user.uid) {
+          this.user = user;
+          this.getUserItems();
+        }
+      })
+    );
 
-    this.sub.push(this.store.select(fromItem.selectAll).subscribe( (res: Item[]) => this.userItems.data = res));
+    this.sub.push(
+      this.store
+        .select(fromItem.selectAll)
+        .subscribe((res: Item[]) => (this.userItems.data = res))
+    );
+
+    this.userItems.paginator = this.tablePaginator;
 
     this.townControl = new FormControl();
 
-    const autocomplete = new google.maps.places.Autocomplete(this.townInput.nativeElement, {types: ['(cities)'] });
+    const autocomplete = new google.maps.places.Autocomplete(
+      this.townInput.nativeElement,
+      { types: ['(cities)'] }
+    );
 
     autocomplete.addListener('place_changed', () => {
       const town = autocomplete.getPlace();
       this.authService.updateData(this.user.uid, {
-        town: town.address_components[0].short_name + ', ' + town.address_components[3].short_name
+        town:
+          town.address_components[0].short_name +
+          ', ' +
+          town.address_components[3].short_name
       });
     });
+  }
 
+  getItemsPerPage(): number {
+    const tableHeight = this.tableHeight.nativeElement.clientHeight;
+    if (tableHeight > 550) {
+      return 10;
+    } else {
+      return 5;
+    }
   }
 
   trackByFn(index: number, item: Item) {
@@ -69,28 +101,33 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   uploadPhoto(event) {
-    this.dialog.open(CropComponent, {data: {
-      file: event.target.files[0],
-      uid: this.user.uid
-    }});
+    this.dialog.open(CropComponent, {
+      data: {
+        file: event.target.files[0],
+        uid: this.user.uid
+      }
+    });
   }
 
   updateFastBuy(event: any) {
-    this.authService.updateData(this.user.uid, {fastBuy: event.value});
+    this.authService.updateData(this.user.uid, { fastBuy: event.value });
   }
 
   getUserItems() {
-      this.store.dispatch(new ItemActions.FetchData({ownerUID: this.user.uid}));
+    this.store.dispatch(new ItemActions.FetchData({ ownerUID: this.user.uid }));
   }
 
   deleteItem(item: Item) {
     const dialogRef = this.dialog.open(PromptComponent);
 
-    dialogRef.afterClosed().pipe(take(1)).subscribe( res => {
-      if (res) {
-        this.store.dispatch( new ItemActions.DeleteItem(item));
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe(res => {
+        if (res) {
+          this.store.dispatch(new ItemActions.DeleteItem(item));
+        }
+      });
   }
 
   openBargain(item: Item) {
@@ -99,7 +136,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.forEach( sub => sub.unsubscribe());
+    this.sub.forEach(sub => sub.unsubscribe());
   }
-
 }

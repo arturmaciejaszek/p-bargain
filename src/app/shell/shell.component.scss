@@ -1,77 +1,68 @@
 .container {
-    height: 100vh;
+  height: 100vh;
 }
 
 mat-toolbar {
-    position: relative;
+  position: relative;
 }
 
 .logo {
-    cursor: pointer;
-    position: absolute;
-    right: 50%;
-    transform: translateX(50%);
-    vertical-align: middle;
+  cursor: pointer;
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  vertical-align: middle;
 
-    &:focus {
-        outline: none;
-    }
+  &:focus {
+    outline: none;
+  }
 }
 
 .avatar {
-    object-fit: cover;
-    border-radius:50%;
-    width: 30px;
-    height: 30px;
-    margin-left: .5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin-left: 0.5rem;
 }
 
 .notification {
-    margin: 0.5rem;
-    min-width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 10px;
-    border: 1px solid black;
-    color: white;
-    font-size: 1rem;
-    background-color: red;
-    position: absolute;
-    top: 1.2rem;
-    right: .5rem;
+  margin: 0.5rem;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  color: white;
+  font-size: 1rem;
+  background-color: red;
+  position: absolute;
+  top: 1.2rem;
+  right: 0.5rem;
 }
 
 .notification_menu {
-    color: red;
-    font-weight: bold;
+  color: red;
+  font-weight: bold;
 }
 
 .bounds {
-    width: 90%;
-    margin: auto;
-    position: relative;
-}
-
-app-shell-tabs {
-    width: 100%;
-    height: 100%;
-    margin: auto;
-    padding-top: 1rem;
+  width: 90%;
+  margin: auto;
+  position: relative;
 }
 
 footer {
-    background-color: grey;
+  background-color: grey;
 }
 
-
 .myself {
-    & > img {
-        height: 3rem;
-        width: auto;
-    }
-
+  & > img {
+    height: 3rem;
+    width: auto;
+  }
 }
 
 .footer_text {
-    font-size: 1.2rem;
-    font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: bold;
 }

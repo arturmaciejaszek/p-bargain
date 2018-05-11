@@ -16,8 +16,8 @@
   </mat-expansion-panel-header>
 
   <ng-template matExpansionPanelContent>
-    <p>{{ item.desc }}</p> 
-    <div class="photos-wrapper" fxLayout="row" fxLayoutGap="10px">
+    <p>{{ item.desc }}</p>
+    <div class="photos-wrapper" fxLayout="row" fxLayoutGap="10px" fxHide.xs>
       <img fxFlex="25" *ngIf="item.photos[0]" [src]="item.photos[0]" alt="">
       <img fxFlex="25" *ngIf="item.photos[1]" [src]="item.photos[1]" alt="">
       <img fxFlex="25" *ngIf="item.photos[2]" [src]="item.photos[2]" alt="">

@@ -1,0 +1,7 @@
+.controls {
+  margin-top: 3rem;
+
+  & > button:not(:last-child) {
+    margin-right: 2rem;
+  }
+}

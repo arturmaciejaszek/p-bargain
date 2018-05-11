@@ -1,7 +1,8 @@
 <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="center center">
   <h1>Select your best frame</h1>
   <div>
-    <img-cropper #cropper [image]="data" [settings]="cropperSettings"></img-cropper><br>
+    <img-cropper #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
+    <br>
   </div>
 
   <mat-progress-bar mode="determinate" [value]="uploadPercent | async"></mat-progress-bar>

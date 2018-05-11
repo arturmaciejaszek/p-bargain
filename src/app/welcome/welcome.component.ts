@@ -11,17 +11,20 @@ import { getIsAuth } from './../app.reducer';
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent implements OnInit {
-
-  constructor(private router: Router, private store: Store<fromRoot.State>) { }
+  constructor(private router: Router, private store: Store<fromRoot.State>) {}
 
   ngOnInit() {
-    this.store.select(getIsAuth).subscribe( auth => {
-      const timeout = setTimeout(() => this.router.navigate(['/auth'], { skipLocationChange: true }), 2600);
+    this.store.select(getIsAuth).subscribe(auth => {
+      const timeout = setTimeout(
+        () => this.router.navigate(['/auth'], { skipLocationChange: true }),
+        2600
+      );
       if (auth) {
         clearTimeout(timeout);
-        this.router.navigate(['/shop'], { skipLocationChange: true });
+        this.router.navigate(['/shop'], {
+          skipLocationChange: true
+        });
       }
     });
   }
-
 }

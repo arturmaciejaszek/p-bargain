@@ -1,39 +1,30 @@
-<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5rem" class="bargains-wrapper">
+<div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-around center" fxLayoutGap="5rem" class="bargains-wrapper">
 
-<mat-spinner *ngIf="(loading$ | async)"></mat-spinner>
-<h3 *ngIf="!(loading$ | async) && (data$ | async).length === 0">You don't have a bargain yet</h3>
+  <mat-spinner *ngIf="(loading$ | async)"></mat-spinner>
+  <h3 *ngIf="!(loading$ | async) && (data$ | async).length === 0">You don't have a bargain yet</h3>
 
-<ng-template [ngIf]="(data$ | async).length > 0">
-  <div class="bargains" fxFlex="40">
+  <ng-template [ngIf]="(data$ | async).length > 0">
+    <div class="bargains" fxFlex="40">
       <mat-form-field floatLabel="never">
-        <input
-          matInput 
-          #filter 
-          type="text" 
-          placeholder="Search for an item"
-          value="">
+        <input matInput #filter type="text" placeholder="Search for an item" value="">
       </mat-form-field>
-    <p>Sold:</p> 
-    <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:true | filterPipe:filter.value)">
-      <app-bargain-item 
-        [item]="bargain" 
-        (openEmitter)="expanded($event)"
-        [expanded]="bargain.uid === currentlyExpanded"
-        [loggedUser]="loggedUser"></app-bargain-item>
+      <p fxFlexAlign.xs="center">Sold:</p>
+      <div class="restricter">
+        <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:true | filterPipe:filter.value)">
+          <app-bargain-item [item]="bargain" (openEmitter)="expanded($event)" [expanded]="bargain.uid === currentlyExpanded" [loggedUser]="loggedUser"></app-bargain-item>
+        </div>
+      </div>
+      <p fxFlexAlign.xs="center">Bought:</p>
+      <div class="restricter">
+        <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:false | filterPipe:filter.value)">
+          <app-bargain-item [item]="bargain" (openEmitter)="expanded($event)" [expanded]="bargain.uid === currentlyExpanded" [loggedUser]="loggedUser"></app-bargain-item>
+        </div>
+      </div>
     </div>
-    <p>Bought:</p> 
-    <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:false | filterPipe:filter.value)">
-      <app-bargain-item 
-        [item]="bargain" 
-        (openEmitter)="expanded($event)"
-        [expanded]="bargain.uid === currentlyExpanded"
-        [loggedUser]="loggedUser"></app-bargain-item>
-    </div>
-  </div>
 
-  <div class="chat" fxFlex="40">
-    <app-chat [loggedUser]="loggedUser"></app-chat>
-  </div>
-</ng-template>
+    <div class="chat" fxFlex="40" fxFlex.xs fxFlexAlign="center">
+      <app-chat [loggedUser]="loggedUser"></app-chat>
+    </div>
+  </ng-template>
 
 </div>

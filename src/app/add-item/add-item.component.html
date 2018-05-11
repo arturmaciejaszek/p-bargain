@@ -1,19 +1,16 @@
-<div fxLayout="row" fxLayoutGap="20px">
+<div fxLayout="row" fxLayoutGap="10rem">
 
-  <div fxLayout="column">
+  <div fxLayout="column" fxHide.xs>
     <h4>Preview:</h4>
     <app-item [item]="itemForm.value" [photos]="photos" editOn="true"></app-item>
   </div>
 
-  <div>
-    <form [formGroup]="itemForm">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <form [formGroup]="itemForm" fxLayout="column" fxLayoutGap="2rem">
 
+      <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutAlign.xs="center center" fxLayout.xs="column" fxLayoutGap.xs="10">
         <mat-form-field color="primary">
-          <input matInput 
-          placeholder="name"
-          formControlName="name"
-          autocomplete="name"
-          required>
+          <input matInput placeholder="name" formControlName="name" autocomplete="name" required>
           <mat-error>Missing name.</mat-error>
         </mat-form-field>
 
@@ -27,38 +24,35 @@
           </mat-select>
           <mat-error>Please choose a category</mat-error>
         </mat-form-field>
+      </div>
 
-        <!-- PHOTO INPUTS -->
-        <div fxLayout="row">
-          <app-dropzone (photoLinkEmitter)="addPhoto($event, 0)" [itemUID]="itemUID" fileName="0"></app-dropzone>
-          <app-dropzone (photoLinkEmitter)="addPhoto($event, 1)" [itemUID]="itemUID" fileName="1"></app-dropzone>
-          <app-dropzone (photoLinkEmitter)="addPhoto($event, 2)" [itemUID]="itemUID" fileName="2"></app-dropzone>
-        </div>
+      <!-- PHOTO INPUTS -->
+      <div fxLayout="row">
+        <app-dropzone (photoLinkEmitter)="addPhoto($event, 0)" [itemUID]="itemUID" fileName="0"></app-dropzone>
+        <app-dropzone (photoLinkEmitter)="addPhoto($event, 1)" [itemUID]="itemUID" fileName="1"></app-dropzone>
+        <app-dropzone (photoLinkEmitter)="addPhoto($event, 2)" [itemUID]="itemUID" fileName="2"></app-dropzone>
+      </div>
 
-        <!-- DESCRIPTION TEXT AREA -->
+      <!-- DESCRIPTION TEXT AREA -->
 
+      <div fxLayout="row" fxLayoutAlign="space-around" fxLayoutAlign.xs="center center" fxLayout.xs="column" fxLayoutGap.xs="10">
         <mat-form-field>
-          <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2"
-                    matAutosizeMaxRows="5" formControlName="desc" maxlength="55" required></textarea>
+          <textarea matInput placeholder="Description" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="5" formControlName="desc"
+            maxlength="55" required></textarea>
         </mat-form-field>
-      
-        <mat-form-field color="primary">
-          <input matInput 
-          placeholder="price"
-          formControlName="price"
-          type="number"
-          min="1"
-          autocomplete="off"
-          required>
+
+        <mat-form-field color="primary" fxFlexAlign="end" fxFlexAlign.xs="center">
+          <input matInput placeholder="price" formControlName="price" type="number" min="1" autocomplete="off" required>
           <mat-error>Price should be bigger than 0.</mat-error>
         </mat-form-field>
+      </div>
 
-        <!-- CONFIRM BUTTON -->
-        <mat-spinner *ngIf="loading" diameter="40"></mat-spinner>
-        <div *ngIf="!loading">
-          <button mat-raised-button color="primary" (click)="onSubmit()">Add Item</button>
-          <button mat-raised-button color="accent" (click)="onCancel()" routerLink="../">Cancel</button>
-        </div>
+      <!-- CONFIRM BUTTON -->
+      <mat-spinner fxFlexAlign="center" *ngIf="loading" diameter="40"></mat-spinner>
+      <div class="controls" *ngIf="!loading" fxLayout="row" fxLayoutAlign="center center">
+        <button mat-raised-button color="primary" (click)="onSubmit()">Add Item</button>
+        <button mat-raised-button color="accent" (click)="onCancel()" routerLink="/profile" skipLocationChange>Cancel</button>
+      </div>
 
     </form>
   </div>

@@ -1,58 +1,78 @@
-.outline {
-    border: 1px solid #f44336;
-    border-radius: 10px;
-    max-width: 300px;
-    margin-bottom: 1rem;
-    font-weight: bold;
+@import '../../../sass/_mixins.scss';
 
-    & > * {
-        padding: .5rem;
-    }
+.outline {
+  border: 1px solid #f44336;
+  border-radius: 10px;
+  max-width: 300px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+
+  @include respond(xs) {
+    width: 90vw;
+  }
+
+  & > * {
+    padding: 0.5rem;
+  }
 }
 
 .avatar {
-    object-fit: cover;
-    border-radius:50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-left: .5rem;
+  object-fit: cover;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 0.5rem;
 }
 
 .chat__Output {
-    height: 300px;
-    max-width: 300px;
-    overflow: auto; 
+  height: 300px;
+  max-width: 300px;
+  overflow: auto;
+
+  @include respond(xs) {
+    width: 90vw;
+  }
 }
 
 .msgs_wrapper {
-    padding: 1rem;
+  padding: 1rem;
 }
 
-.mine, .notMine {
-    border: 1px solid black;
-    border-radius: 10px;
-    min-height: 2rem;
-    padding: .5rem;
-    box-shadow: 1px 1px 1px black;
-    margin-top: 3px;
+.mine,
+.notMine {
+  border: 1px solid black;
+  border-radius: 10px;
+  min-height: 2rem;
+  padding: 0.5rem;
+  box-shadow: 1px 1px 1px black;
+  margin-top: 3px;
 }
 
 .mine {
-    background-color: #f44336;
-    color: black;
-    align-self: flex-end;
-    margin-left: .5rem;
+  background-color: #f44336;
+  color: black;
+  align-self: flex-end;
+  margin-left: 0.5rem;
 }
 
 .notMine {
-    background-color: #bdbdbd;
-    color: black;
-    align-self: flex-start;
-    margin-right: .5rem;
+  background-color: #bdbdbd;
+  color: black;
+  align-self: flex-start;
+  margin-right: 0.5rem;
 }
 
 .seen {
-    align-self: flex-end;
-    font-size: 1rem;
-    margin-bottom: .5rem;
+  align-self: flex-end;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+mat-form-field {
+  width: 100%;
+  max-width: 300px;
+
+  @include respond(xs) {
+    width: 90vw;
+  }
 }

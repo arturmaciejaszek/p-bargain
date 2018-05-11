@@ -1,74 +1,86 @@
-<div fxLayout="row" class="wrapper">
-  <div class="left" fxFlex="50%">
+<div fxLayout="row" fxLayout.xs="column" class="wrapper">
+  <div class="left" fxFlex="50%" fxLayout="column" fxFlexOrder.xs="2">
 
     <h4>Your items</h4>
 
-    <mat-spinner *ngIf="isLoading$|async"></mat-spinner>
-    <mat-table *ngIf="!(isLoading$|async)" #table [dataSource]="userItems" [trackBy]="trackByFn">
+    <mat-spinner fxFlexAlign="center" *ngIf="isLoading$|async"></mat-spinner>
+    <div #height fxFlex="70%">
+      <mat-table *ngIf="!(isLoading$|async)" #table [dataSource]="userItems" [trackBy]="trackByFn">
 
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
-      </ng-container>
-  
-      <ng-container matColumnDef="price">
-        <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.price}} $ </mat-cell>
-      </ng-container>
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+        </ng-container>
 
-      <ng-container matColumnDef="action">
-        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-        <mat-cell *matCellDef="let element"> 
-          <button *ngIf="element.status === 'active'" mat-button color="accent" (click)="deleteItem(element)">DELETE</button> 
-          <button *ngIf="element.status === 'sold'" mat-button color="primary" (click)="openBargain(element)">BARGAIN</button> 
-        </mat-cell>
-      </ng-container>
-  
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>    
+        <ng-container matColumnDef="price">
+          <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.price}} $ </mat-cell>
+        </ng-container>
 
-    <button mat-raised-button color="primary" routerLink="/add" skipLocationChange>Add Item</button>
-  </div>
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button *ngIf="element.status === 'active'" mat-button color="accent" (click)="deleteItem(element)">DELETE</button>
+            <button *ngIf="element.status === 'sold'" mat-button color="primary" (click)="openBargain(element)">BARGAIN</button>
+          </mat-cell>
+        </ng-container>
 
-  <div class="middle" fxFlex="25%">
-    <h3>Hello</h3>
-    <h1>{{ user?.name }}</h1>
-    
-    <div class="container" fxLayoutAlign="center center">
-      <img class="avatar" [src]="user?.photoURL" alt="user photo">
-      <button mat-fab (click)="upload.click()" color="primary">Upload</button>
-      <input type="file" accept="image/*" (change)="uploadPhoto($event)" #upload>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+      </mat-table>
+      <mat-paginator #paginator [pageSize]="getItemsPerPage()"></mat-paginator>
     </div>
+
+    <span fxFlex *ngIf="!(isLoading$|async)"></span>
+    <button *ngIf="!(isLoading$|async)" fxFlexAlign="center" mat-raised-button color="primary" routerLink="/add" skipLocationChange>Add Item</button>
   </div>
 
-  <div class="right" fxFlex="25%" fxLayout="column" fxLayoutAlign="space-between">
+  <div fxFlex="50%" fxLayout="row" fxFlexOrder.xs="1">
 
-    <!-- GOT RID OF IT FOR NOW -->
     <span fxFlex></span>
-    <!-- <div>
-      <h4>Stars Rank</h4>
-      <div fxLayout="row" fxLayoutAlign="end center">
-        <span>{{ user?.rank }} </span>
-        <img class="star" src="./assets/img/star.svg" alt="star icon">
+
+    <div class="middle">
+      <h3>Hello</h3>
+      <h1>{{ user?.name }}</h1>
+
+      <div class="container" fxLayoutAlign="center center">
+        <img class="avatar" [src]="user?.photoURL" alt="user photo">
+        <button mat-fab (click)="upload.click()" color="primary">Upload</button>
+        <input type="file" accept="image/*" (change)="uploadPhoto($event)" #upload>
       </div>
-    </div> -->
-
-    <div fxLayout="column">
-      <h5>Settings</h5>
-
-      <mat-form-field fxFlexAlign="end">
-        <input matInput placeholder="Town" #townInput [formControl]="townControl" [value]="user?.town">
-      </mat-form-field>
-
-      <mat-radio-group (change)="updateFastBuy($event)" [value]="user?.fastBuy">
-        <mat-radio-button color="primary" [value]='true' >Fast Buy</mat-radio-button>
-        <mat-radio-button color="primary" [value]='false' >Careful Buy</mat-radio-button>
-      </mat-radio-group>
-
-      <p>Would you like to change your password? <a href="javascript:void(0);" routerLink="/auth/changePass">Change</a></p>
-
     </div>
 
+    <div class="right" fxLayout="column" fxLayoutAlign="space-between">
+
+      <!-- GOT RID OF IT FOR NOW -->
+      <span fxFlex></span>
+      <!-- <div>
+        <h4>Stars Rank</h4>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <span>{{ user?.rank }} </span>
+          <img class="star" src="./assets/img/star.svg" alt="star icon">
+        </div>
+      </div> -->
+
+      <div fxLayout="column">
+        <h5>Settings</h5>
+
+        <mat-form-field fxFlexAlign="end">
+          <input matInput placeholder="Town" #townInput [formControl]="townControl" [value]="user?.town">
+        </mat-form-field>
+
+        <mat-radio-group (change)="updateFastBuy($event)" [value]="user?.fastBuy">
+          <mat-radio-button color="primary" [value]='true'>Fast Buy</mat-radio-button>
+          <mat-radio-button color="primary" [value]='false'>Careful Buy</mat-radio-button>
+        </mat-radio-group>
+
+        <p>Would you like to change your password?
+          <a href="javascript:void(0);" routerLink="/auth/changePass">Change</a>
+        </p>
+
+      </div>
+
+    </div>
   </div>
 </div>
