@@ -1,0 +1,26 @@
+<div class="bargains-wrapper" fxLayout="column">
+  <h3 *ngIf="!(loading$ | async) && (data$ | async).length === 0">You don't have a bargain yet</h3>
+
+  <ng-template [ngIf]="(data$ | async).length > 0">
+    <div class="bargains">
+      <mat-form-field floatLabel="never">
+        <input matInput #filter type="text" placeholder="Search for an item" value="">
+      </mat-form-field>
+      <p>Sold:</p>
+      <div class="restricter">
+        <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:true | filterPipe:filter.value)">
+          <app-bargain-item [item]="bargain" [loggedUser]="loggedUser"></app-bargain-item>
+        </div>
+      </div>
+      <p>Bought:</p>
+      <div class="restricter">
+        <div *ngFor="let bargain of (data$ | async | bSorter:loggedUser?.uid:false | filterPipe:filter.value)">
+          <app-bargain-item [item]="bargain" [loggedUser]="loggedUser"></app-bargain-item>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <span fxFlex></span>
+  <button fxFlexAlign="center" mat-raised-button color="secondary" (click)="return()">Return</button>
+</div>

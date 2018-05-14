@@ -9,22 +9,21 @@ import { ChatComponent } from './chat/chat.component';
 import { BargainItemComponent } from './bargain-item/bargain-item.component';
 import { FilterPipePipe } from './filter-pipe.pipe';
 import { OrderByPipe } from './chat/order-by.pipe';
+import { BargainsMobileComponent } from './bargains-mobile/bargains-mobile.component';
 
 @NgModule({
-    declarations: [
-        BargainsComponent,
-        BSorterPipe,
-        ChatComponent,
-        BargainItemComponent,
-        FilterPipePipe,
-        OrderByPipe,
-    ],
-    imports: [
-        SharedModule,
-        BargainsRoutingModule,
-        ItemModule
-    ],
-    exports: [],
-    providers: [],
+  declarations: [
+    BargainsComponent,
+    BSorterPipe,
+    ChatComponent,
+    BargainItemComponent,
+    FilterPipePipe,
+    OrderByPipe,
+    BargainsMobileComponent
+  ],
+  imports: [SharedModule, BargainsRoutingModule, ItemModule],
+  exports: [],
+  providers: [],
+  entryComponents: [BargainsMobileComponent]
 })
-export class BargainsModule { }
+export class BargainsModule {}

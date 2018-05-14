@@ -1,8 +1,8 @@
-@import '../../sass/_mixins.scss';
+@import '../../../sass/_mixins.scss';
 
 .bargains-wrapper {
   width: 90vw;
-  height: 80vh;
+  max-height: 75vh;
   margin: auto;
 }
 
@@ -30,8 +30,6 @@ mat-form-field {
   width: 100%;
 }
 
-.mobile {
-  @include respond(lt-xs) {
-    margin-top: 2rem;
-  }
+button {
+  margin-top: 2rem;
 }

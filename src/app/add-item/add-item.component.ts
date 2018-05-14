@@ -16,7 +16,7 @@ import { User } from './../auth/user.model';
 @Component({
   selector: 'app-add-item',
   templateUrl: './add-item.component.html',
-  styleUrls: ['./add-item.component.scss'],
+  styleUrls: ['./add-item.component.scss']
 })
 export class AddItemComponent implements OnInit, OnDestroy {
   itemForm: FormGroup;
@@ -27,24 +27,36 @@ export class AddItemComponent implements OnInit, OnDestroy {
   photos: string[] = [];
   loading = false;
 
-  constructor(private db: AngularFirestore,
+  constructor(
+    private db: AngularFirestore,
     private authService: AuthService,
     private afs: AngularFireStorage,
     private loc: Location,
-    private store: Store<fromItem.State>) { }
+    private store: Store<fromItem.State>
+  ) {}
 
   ngOnInit() {
     this.formInit();
     this.itemUID = this.db.createId();
-    this.categories = ['clothes', 'books', 'accessories', 'toys', 'crafts', 'others'];
-    this.sub = this.store.select(getUser).subscribe( user => this.user = user);
+    this.categories = [
+      'clothes',
+      'books',
+      'accessories',
+      'toys',
+      'crafts',
+      'others'
+    ];
+    this.sub = this.store.select(getUser).subscribe(user => (this.user = user));
   }
 
   private formInit() {
     this.itemForm = new FormGroup({
       name: new FormControl('Name', Validators.required),
       category: new FormControl('others', Validators.required),
-      desc: new FormControl('your description goes here', [Validators.required, Validators.maxLength(55)]),
+      desc: new FormControl('your description goes here', [
+        Validators.required,
+        Validators.maxLength(55)
+      ]),
       price: new FormControl(1, Validators.required)
     });
   }
@@ -64,19 +76,20 @@ export class AddItemComponent implements OnInit, OnDestroy {
       town: this.user.town
     };
 
-    this.store.dispatch( new ItemActions.CreateItem(newItem));
+    this.store.dispatch(new ItemActions.CreateItem(newItem));
 
     this.loading = true;
   }
 
   onCancel() {
     this.formInit();
-    this.photos.forEach( (photo, idx) => this.afs.ref(`/items/${this.itemUID}/${idx}`).delete() );
+    this.photos.forEach((photo, idx) =>
+      this.afs.ref(`/items/${this.itemUID}/${idx}`).delete()
+    );
     this.loc.back();
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-
 }

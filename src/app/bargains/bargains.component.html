@@ -4,7 +4,7 @@
   <h3 *ngIf="!(loading$ | async) && (data$ | async).length === 0">You don't have a bargain yet</h3>
 
   <ng-template [ngIf]="(data$ | async).length > 0">
-    <div class="bargains" fxFlex="40">
+    <div class="bargains" fxFlex="40" fxHide.xs>
       <mat-form-field floatLabel="never">
         <input matInput #filter type="text" placeholder="Search for an item" value="">
       </mat-form-field>
@@ -20,6 +20,10 @@
           <app-bargain-item [item]="bargain" (openEmitter)="expanded($event)" [expanded]="bargain.uid === currentlyExpanded" [loggedUser]="loggedUser"></app-bargain-item>
         </div>
       </div>
+    </div>
+
+    <div class="mobile" fxShow.xs>
+      <button mat-raised-button (click)="openBottomSheet()">Select a chat</button>
     </div>
 
     <div class="chat" fxFlex="40" fxFlex.xs fxFlexAlign="center">

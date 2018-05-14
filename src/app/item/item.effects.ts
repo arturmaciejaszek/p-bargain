@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, ofType } from '@ngrx/effects';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
@@ -10,9 +10,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as firebase from 'firebase';
 
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { zip } from 'rxjs/observable/zip';
+import { Observable, zip, of } from 'rxjs';
 import { take, catchError, map, combineLatest } from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
@@ -34,7 +32,7 @@ import * as UI from '../shared/ui.actions';
 @Injectable()
 export class ItemEffects {
   constructor(
-    private actions: Actions,
+    private actions$: Actions,
     private db: AngularFirestore,
     private router: Router,
     private store: Store<fromRoot.State>,
@@ -42,7 +40,7 @@ export class ItemEffects {
   ) {}
 
   @Effect()
-  fetchData: Observable<Action> = this.actions
+  fetchData: Observable<Action> = this.actions$
     .ofType(ItemActions.FETCH_DATA)
     .do(_ => this.store.dispatch(new UI.StartLoading()))
     .do(_ => this.store.dispatch(new ItemActions.ResetState()))
@@ -76,7 +74,7 @@ export class ItemEffects {
     );
 
   @Effect()
-  deleteItem: Observable<Action> = this.actions
+  deleteItem: Observable<Action> = this.actions$
     .ofType(ItemActions.DELETE_ITEM)
     .map((action: ItemActions.DeleteItem) => action.payload)
     .mergeMap((item: Item) =>
@@ -86,7 +84,7 @@ export class ItemEffects {
     );
 
   @Effect()
-  createItem: Observable<Action> = this.actions
+  createItem: Observable<Action> = this.actions$
     .ofType(ItemActions.CREATE_ITEM)
     .map((action: ItemActions.CreateItem) => action.payload)
     .mergeMap((item: Item) =>
@@ -99,7 +97,7 @@ export class ItemEffects {
     );
 
   @Effect()
-  buyItem: Observable<Action> = this.actions
+  buyItem: Observable<Action> = this.actions$
     .ofType(ItemActions.BUY_ITEM)
     .map((action: ItemActions.BuyItem) => action.payload)
     .mergeMap((data: { uid: string; changes: Item }) =>
@@ -109,13 +107,13 @@ export class ItemEffects {
     );
 
   @Effect({ dispatch: false })
-  callSuccess: Observable<Action> = this.actions
+  callSuccess: Observable<Action> = this.actions$
     .ofType(ItemActions.CALL_SUCCESS)
     .map((action: ItemActions.CallSuccess) => action.payload)
     .do(res => this.errorHandler.show(res, null));
 
   @Effect({ dispatch: false })
-  callFailure: Observable<Action> = this.actions
+  callFailure: Observable<Action> = this.actions$
     .ofType(ItemActions.CALL_FAILURE)
     .map((action: ItemActions.CallFailure) => action.payload)
     .do(res => this.errorHandler.show(res, null));

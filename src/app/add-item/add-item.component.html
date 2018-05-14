@@ -28,9 +28,9 @@
 
       <!-- PHOTO INPUTS -->
       <div fxLayout="row">
-        <app-dropzone (photoLinkEmitter)="addPhoto($event, 0)" [itemUID]="itemUID" fileName="0"></app-dropzone>
-        <app-dropzone (photoLinkEmitter)="addPhoto($event, 1)" [itemUID]="itemUID" fileName="1"></app-dropzone>
-        <app-dropzone (photoLinkEmitter)="addPhoto($event, 2)" [itemUID]="itemUID" fileName="2"></app-dropzone>
+        <app-dropzone (photoLinkEmitter)="addPhoto($event, 0)" (loadingEmitter)="loading = $event" [itemUID]="itemUID" fileName="0"></app-dropzone>
+        <app-dropzone (photoLinkEmitter)="addPhoto($event, 1)" (loadingEmitter)="loading = $event" [itemUID]="itemUID" fileName="1"></app-dropzone>
+        <app-dropzone (photoLinkEmitter)="addPhoto($event, 2)" (loadingEmitter)="loading = $event" [itemUID]="itemUID" fileName="2"></app-dropzone>
       </div>
 
       <!-- DESCRIPTION TEXT AREA -->
