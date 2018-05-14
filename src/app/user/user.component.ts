@@ -91,6 +91,8 @@ export class UserComponent implements OnInit, OnDestroy {
     const tableHeight = this.tableHeight.nativeElement.clientHeight;
     if (tableHeight > 550) {
       return 10;
+    } else if (tableHeight < 380) {
+      return 3;
     } else {
       return 5;
     }
@@ -132,7 +134,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   openBargain(item: Item) {
     this.chatService.activeChat$.next(item);
-    this.router.navigate([`/bargains`], { skipLocationChange: true });
+    this.router.navigate([`/bargains`]);
   }
 
   ngOnDestroy() {

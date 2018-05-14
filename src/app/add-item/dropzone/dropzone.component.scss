@@ -16,6 +16,11 @@
     height: 100px;
     width: 100px;
   }
+  @include respond(lt-xs) {
+    height: 70px;
+    width: 70px;
+    font-size: 1.2rem;
+  }
 
   &.hovering {
     border: 2px solid #f16624;

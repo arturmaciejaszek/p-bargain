@@ -7,23 +7,17 @@ import { PromptComponent } from './../shared/prompt/prompt.component';
 import { SharedModule } from './../shared/shared.module';
 import { ItemComponent } from './item.component';
 import { ItemEffects } from './item.effects';
-import { itemReducer, metaReducer } from './item.reducer';
+import { itemReducer, metaReducer, reducerForAoT } from './item.reducer';
 
 @NgModule({
-    declarations: [
-        ItemComponent,
-        PromptComponent
-    ],
-    imports: [
-        SharedModule,
-        SwiperModule,
-        EffectsModule.forFeature([ItemEffects]),
-        StoreModule.forFeature('item', metaReducer(itemReducer))
-    ],
-    exports: [
-        ItemComponent,
-        PromptComponent
-    ],
-    entryComponents: [PromptComponent]
+  declarations: [ItemComponent, PromptComponent],
+  imports: [
+    SharedModule,
+    SwiperModule,
+    EffectsModule.forFeature([ItemEffects]),
+    StoreModule.forFeature('item', reducerForAoT)
+  ],
+  exports: [ItemComponent, PromptComponent],
+  entryComponents: [PromptComponent]
 })
 export class ItemModule {}

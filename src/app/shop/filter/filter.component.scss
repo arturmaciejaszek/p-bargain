@@ -1,3 +1,18 @@
+@import '../../../sass/_mixins.scss';
+
 .filter {
-    padding: 0.5rem;
+  padding: 0.5rem;
+}
+
+span {
+  @include respond(lt-sm) {
+    margin: auto;
+  }
+}
+
+mat-form-field {
+  @include respond(lt-sm) {
+    margin: auto;
+    width: 80%;
+  }
 }

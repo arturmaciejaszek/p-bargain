@@ -3,13 +3,9 @@
     <h3 cdk-focus-initial>Filter by</h3>
   </span>
 
-  <span fxLayout="column" fxLayout.lt-sm="row" fxLayoutGap.lt-sm="10px" fxLayoutAlign.lt-sm="space-around center">
-    <mat-form-field fxFlexAlign="end">
-      <input matInput 
-      placeholder="Town" 
-      #townInput 
-      [formControl]="townControl" 
-      [value]="selectedTown" >
+  <span fxLayout="column" fxLayoutGap.lt-sm="10px">
+    <mat-form-field fxFlexAlign.gt-xs="end">
+      <input matInput placeholder="Town" #townInput [formControl]="townControl" [value]="selectedTown">
     </mat-form-field>
 
     <mat-form-field>
@@ -22,4 +18,3 @@
     </mat-form-field>
   </span>
 </div>
-  

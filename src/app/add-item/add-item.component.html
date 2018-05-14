@@ -51,7 +51,7 @@
       <mat-spinner fxFlexAlign="center" *ngIf="loading" diameter="40"></mat-spinner>
       <div class="controls" *ngIf="!loading" fxLayout="row" fxLayoutAlign="center center">
         <button mat-raised-button color="primary" (click)="onSubmit()">Add Item</button>
-        <button mat-raised-button color="accent" (click)="onCancel()" routerLink="/profile" skipLocationChange>Cancel</button>
+        <button mat-raised-button color="accent" (click)="onCancel()" routerLink="/profile">Cancel</button>
       </div>
 
     </form>

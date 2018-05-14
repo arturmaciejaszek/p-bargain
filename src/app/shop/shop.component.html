@@ -1,10 +1,9 @@
-
 <mat-drawer-container fxLayout="row" fxLayoutAlign="space-between center" class="wrapper">
   <mat-drawer #drawer [mode]="drawerMode">
     <app-filter></app-filter>
   </mat-drawer>
 
-  <mat-drawer-content fxFlex >
+  <mat-drawer-content fxFlex>
     <button type="button" mat-button (click)="drawer.toggle()">Filter</button>
     <div class="helper" fxLayoutAlign="center center">
       <mat-spinner *ngIf="(loading$|async)"></mat-spinner>
@@ -22,5 +21,3 @@
   </mat-drawer-content>
 
 </mat-drawer-container>
-
-

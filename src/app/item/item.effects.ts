@@ -92,7 +92,7 @@ export class ItemEffects {
     .mergeMap((item: Item) =>
       this.batchCreate(item)
         .then(_ => {
-          this.router.navigate([`/profile`], { skipLocationChange: true });
+          this.router.navigate([`/profile`]);
           return new ItemActions.CallSuccess('success');
         })
         .catch(err => new ItemActions.CallFailure('error'))

@@ -1,11 +1,23 @@
+@import '../../sass/_mixins.scss';
+
 mat-card {
-    width: 30vw;
-    min-width: 300px;
-    height: 75vh;
-    margin: 2rem auto;
+  width: 30vw;
+  min-width: 300px;
+  height: 75vh;
+  margin: 2rem auto;
+  @include respond(ipad-pro) {
+    width: 50vw;
+  }
+  @include respond(sm) {
+    min-width: 400px;
+  }
+  @include respond(xs) {
+    height: auto;
+  }
 }
 
-app-register, app-login {
-    width: 80%;
-    padding: auto;
+app-register,
+app-login {
+  width: 80%;
+  padding: auto;
 }

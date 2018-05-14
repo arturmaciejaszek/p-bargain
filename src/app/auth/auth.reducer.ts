@@ -10,7 +10,7 @@ export interface State {
 }
 
 const initialState: State = {
-  isAuthenticated: false,
+  isAuthenticated: null,
   loggedUser: null
 };
 

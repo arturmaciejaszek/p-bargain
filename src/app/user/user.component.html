@@ -1,5 +1,5 @@
-<div fxLayout="row" fxLayout.xs="column" class="wrapper">
-  <div class="left" fxFlex="50%" fxLayout="column" fxFlexOrder.xs="2">
+<div fxLayout="row" fxLayout.lt-md="column" class="wrapper">
+  <div class="left" fxFlex="50%" fxLayout="column" fxFlexOrder.lt-md="2">
 
     <h4>Your items</h4>
 
@@ -33,12 +33,12 @@
     </div>
 
     <span fxFlex *ngIf="!(isLoading$|async)"></span>
-    <button *ngIf="!(isLoading$|async)" fxFlexAlign="center" mat-raised-button color="primary" routerLink="/add" skipLocationChange>Add Item</button>
+    <button *ngIf="!(isLoading$|async)" fxFlexAlign="center" mat-raised-button color="primary" routerLink="/add">Add Item</button>
   </div>
 
-  <div fxFlex="50%" fxLayout="row" fxFlexOrder.xs="1">
+  <div fxFlex="50%" fxLayout="row" fxFlexOrder.lt-md="1" fxLayoutAlign.lt-md="space-around">
 
-    <span fxFlex></span>
+    <span fxFlex fxHide.lt-md></span>
 
     <div class="middle">
       <h3>Hello</h3>

@@ -1,48 +1,46 @@
 <div class="container" fxLayout="column">
-  <mat-toolbar color="primary" role="header" class="mat-elevation-z8" fxFlexLayoutAlign="space-between center">    
-    <span class="logo" routerLink="/shop" skipLocationChange><mat-icon svgIcon="bargain"></mat-icon>argain</span>
+  <mat-toolbar color="primary" role="header" class="mat-elevation-z8" fxFlexLayoutAlign="space-between center">
+    <span class="logo" routerLink="/shop">
+      <mat-icon svgIcon="bargain"></mat-icon>argain</span>
 
     <span fxFlex></span>
 
     <mat-spinner *ngIf="user && !(photoURL$|async) && user.photoURL !== './assets/img/thumb-anon.jpg'" diameter="20" color="accent"></mat-spinner>
 
     <div *ngIf="user">
-      <button fxLayoutAlign.lt-sm="end center"
-        mat-button 
-        [matMenuTriggerFor]="userMenu">
+      <button fxLayoutAlign.lt-sm="end center" mat-button [matMenuTriggerFor]="userMenu">
         <span fxHide.lt-sm>{{ user?.name }}</span>
         <img [src]="user?.photoURL" alt="Avatar" class="avatar">
-        <span *ngIf="(unreadCount$ | async) > 0" class="notification" 
-          fxLayout="row" fxLayoutAlign="center center">{{ unreadCount$ | async }}</span>
+        <span *ngIf="(unreadCount$ | async) > 0" class="notification" fxLayout="row" fxLayoutAlign="center center">{{ unreadCount$ | async }}</span>
       </button>
       <mat-menu #userMenu="matMenu" overlapTrigger="false">
-          <button mat-menu-item routerLink="/shop" skipLocationChange>Shop</button>
-          <button mat-menu-item routerLink="/bargains" skipLocationChange>
-            Bargains 
-            <span *ngIf="(unreadCount$ | async) > 0" class="notification_menu">&nbsp;{{ unreadCount$ | async }}</span>
-          </button>
-          <button mat-menu-item routerLink="/profile" skipLocationChange>Profile</button>
-          <button mat-menu-item (click)="onLogout()">Logout</button>
-        </mat-menu>
-      </div>
-    </mat-toolbar>
+        <button mat-menu-item routerLink="/shop">Shop</button>
+        <button mat-menu-item routerLink="/bargains">
+          Bargains
+          <span *ngIf="(unreadCount$ | async) > 0" class="notification_menu">&nbsp;{{ unreadCount$ | async }}</span>
+        </button>
+        <button mat-menu-item routerLink="/profile">Profile</button>
+        <button mat-menu-item (click)="onLogout()">Logout</button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
 
   <!-- THE MAIN APP -->
-<div class="bounds" fxFlex fxLayoutAlign="center center">
-  <router-outlet></router-outlet>
-</div>
+  <div class="bounds" fxFlex fxLayoutAlign="center center">
+    <router-outlet></router-outlet>
+  </div>
 
 </div>
 
-<footer fxLayout="row" fxLayoutAlign="space-between center">
+<footer fxLayout="row" fxLayoutAlign="space-between center" fxFlexAlign="end">
   <div class="myself" fxLayout="row" fxLayoutAlign="center center">
     <img src="./assets/img/am.png" alt="">
     <span class="footer_text">Made to showcase my Angular abilities</span>
   </div>
   <div fxLaoutAlign="center center">
-      <a mat-button href="https://github.com/arturmaciejaszek/p-bargain">
-        <mat-icon svgIcon="github"></mat-icon>
-        <span class="footer_text">Code</span>
-      </a>
+    <a mat-button href="https://github.com/arturmaciejaszek/p-bargain">
+      <mat-icon svgIcon="github"></mat-icon>
+      <span class="footer_text">Code</span>
+    </a>
   </div>
 </footer>

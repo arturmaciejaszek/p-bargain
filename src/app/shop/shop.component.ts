@@ -1,6 +1,14 @@
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { trigger, state, style, transition, animate, keyframes, group } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+  keyframes,
+  group
+} from '@angular/animations';
 import { ObservableMedia, MediaChange } from '@angular/flex-layout';
 import { Observable } from 'rxjs/observable';
 import { Store } from '@ngrx/store';
@@ -22,31 +30,40 @@ import * as ItemActions from '../item/item.actions';
   animations: [
     trigger('animate', [
       transition('void => *', [
-        animate(300, keyframes([
-          style({
-            transform: 'translateX(-100px)',
-            opacity: 0,
-            offset: 0
-          }),
-          style({
-            transform: 'translateX(0px)',
-            opacity: 1,
-            offset: 1
-          })
-        ]))
-      ]),
+        animate(
+          300,
+          keyframes([
+            style({
+              transform: 'translateX(-100px)',
+              opacity: 0,
+              offset: 0
+            }),
+            style({
+              transform: 'translateX(0px)',
+              opacity: 1,
+              offset: 1
+            })
+          ])
+        )
+      ])
       // transition('* => void', [
       //   group([
-      //     animate(300, style({
-      //       color: 'red'
-      //     })),
-      //     animate(800, style({
-      //       transform: 'translateX(100px)',
-      //       opacity: 0
-      //     }))
+      //     animate(
+      //       300,
+      //       style({
+      //         color: 'red'
+      //       })
+      //     ),
+      //     animate(
+      //       800,
+      //       style({
+      //         transform: 'translateX(100px)',
+      //         opacity: 0
+      //       })
+      //     )
       //   ])
       // ])
-    ]),
+    ])
   ]
 })
 export class ShopComponent implements OnInit, OnDestroy {
@@ -58,34 +75,47 @@ export class ShopComponent implements OnInit, OnDestroy {
   userTown: string;
   sub: Subscription[] = [];
 
-  constructor(private store: Store<fromItem.State>,
-              private db: AngularFirestore,
-              private mediaQueries: ObservableMedia) { }
+  constructor(
+    private store: Store<fromItem.State>,
+    private db: AngularFirestore,
+    private mediaQueries: ObservableMedia
+  ) {}
 
   ngOnInit() {
-    this.sub.push(this.mediaQueries.subscribe( (media: MediaChange) => {
-      if (media.mediaQuery === '(min-width: 0px) and (max-width: 599px)') {
-        this.drawerMode = 'push';
-      } else {
-        this.drawerMode = 'side';
-      }
-    }));
-    this.sub.push(this.store.select(getUser).pipe(take(1)).subscribe( user => {
-      if (user) {
-        this.userUID = user.uid;
-        this.userTown = user.town;
-        this.sub.push(this.db.doc(`users/${this.userUID}/ignored/list`)
-          .valueChanges().subscribe( (list: {list: string[]}) => {
-            if (list) {
-              this.ignoredList = list.list;
-            }
-          }));
-      }
-    }));
+    this.sub.push(
+      this.mediaQueries.subscribe((media: MediaChange) => {
+        if (media.mediaQuery === '(min-width: 0px) and (max-width: 599px)') {
+          this.drawerMode = 'push';
+        } else {
+          this.drawerMode = 'side';
+        }
+      })
+    );
+    this.sub.push(
+      this.store
+        .select(getUser)
+        .pipe(take(1))
+        .subscribe(user => {
+          if (user) {
+            this.userUID = user.uid;
+            this.userTown = user.town;
+            this.sub.push(
+              this.db
+                .doc(`users/${this.userUID}/ignored/list`)
+                .valueChanges()
+                .subscribe((list: { list: string[] }) => {
+                  if (list) {
+                    this.ignoredList = list.list;
+                  }
+                })
+            );
+          }
+        })
+    );
 
     this.loading$ = this.store.select(fromItem.getIsLoading);
 
-    this.data$ = this.store.select( fromItem.getNonMine );
+    this.data$ = this.store.select(fromItem.getNonMine);
   }
 
   ignore(item: Item) {
@@ -94,14 +124,16 @@ export class ShopComponent implements OnInit, OnDestroy {
       posted: +item.posted
     };
     let newList: string[];
-    // this.ignoredList.push(JSON.stringify(ignoreItemData));
     newList = [...this.ignoredList, JSON.stringify(ignoreItemData)];
     this.store.dispatch(new ItemActions.IgnoreItem(item));
-    this.db.doc(`users/${this.userUID}`).collection('ignored').doc('list').set({list: newList});
+    this.db
+      .doc(`users/${this.userUID}`)
+      .collection('ignored')
+      .doc('list')
+      .set({ list: newList });
   }
 
   ngOnDestroy() {
-    this.sub.forEach( sub => sub.unsubscribe());
+    this.sub.forEach(sub => sub.unsubscribe());
   }
-
 }
