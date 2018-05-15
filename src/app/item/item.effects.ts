@@ -102,8 +102,11 @@ export class ItemEffects {
     .map((action: ItemActions.BuyItem) => action.payload)
     .mergeMap((data: { uid: string; changes: Item }) =>
       this.batchOnBuy(data)
-        .then(_ => new ItemActions.IgnoreItem(data.changes))
-        .catch(err => new ItemActions.CallFailure('error'))
+        .then(_ => {
+          this.store.dispatch(new ItemActions.IgnoreItem(data.changes));
+          return new ItemActions.CallSuccess('You got it!');
+        })
+        .catch(err => new ItemActions.CallFailure('Sorry someone was faster'))
     );
 
   @Effect({ dispatch: false })

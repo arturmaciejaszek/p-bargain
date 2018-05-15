@@ -8,6 +8,8 @@
   <div fxLayout="column" fxLayoutAlign="center center">
     <form [formGroup]="itemForm" fxLayout="column" fxLayoutGap="2rem">
 
+      <h5 class="warning" fxFlexAlign="center" *ngIf="!user.town">Add a town to your profile to add items</h5>
+
       <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutAlign.xs="center center" fxLayout.xs="column" fxLayoutGap.xs="10">
         <mat-form-field color="primary">
           <input matInput placeholder="name" formControlName="name" autocomplete="name" required>
@@ -50,7 +52,7 @@
       <!-- CONFIRM BUTTON -->
       <mat-spinner fxFlexAlign="center" *ngIf="loading" diameter="40"></mat-spinner>
       <div class="controls" *ngIf="!loading" fxLayout="row" fxLayoutAlign="center center">
-        <button mat-raised-button color="primary" (click)="onSubmit()">Add Item</button>
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!user.town">Add Item</button>
         <button mat-raised-button color="accent" (click)="onCancel()" routerLink="/profile">Cancel</button>
       </div>
 
