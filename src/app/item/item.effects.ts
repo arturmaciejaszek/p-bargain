@@ -10,8 +10,16 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as firebase from 'firebase';
 
-import { Observable, zip, of } from 'rxjs';
-import { take, catchError, map, combineLatest } from 'rxjs/operators';
+import { Observable, zip, of, pipe } from 'rxjs';
+import {
+  take,
+  catchError,
+  map,
+  combineLatest,
+  switchMap,
+  tap,
+  mergeMap
+} from 'rxjs/operators';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/catch';
@@ -40,86 +48,91 @@ export class ItemEffects {
   ) {}
 
   @Effect()
-  fetchData: Observable<Action> = this.actions$
-    .ofType(ItemActions.FETCH_DATA)
-    .do(_ => this.store.dispatch(new UI.StartLoading()))
-    .do(_ => this.store.dispatch(new ItemActions.ResetState()))
-    .map((action: ItemActions.FetchData) => action.payload)
-    .switchMap((payload: ItemQuery) => {
-      return of(payload)
-        .switchMap(res =>
+  fetchData: Observable<Action> = this.actions$.pipe(
+    ofType(ItemActions.FETCH_DATA),
+    tap(_ => this.store.dispatch(new UI.StartLoading())),
+    tap(_ => this.store.dispatch(new ItemActions.ResetState())),
+    map((action: ItemActions.FetchData) => action.payload),
+    switchMap((payload: ItemQuery) => {
+      return of(payload).pipe(
+        switchMap(res =>
           this.runQuery(res).pipe(combineLatest(of(res.ownerUID)))
-        )
-        .catch(err => of());
-    })
-    .mergeMap(([queryResult, userUID]: [any, string]) => {
+        ),
+        catchError(err => of())
+      );
+    }),
+    mergeMap(([queryResult, userUID]: [any, string]) => {
       if (!userUID) {
         return this.filterData(queryResult).pipe(combineLatest(of(false)));
       } else {
         return of(queryResult).pipe(combineLatest(of(true)));
       }
+    }),
+    map(([result, destructive]: [Item[], boolean]) => {
+      this.store.dispatch(new UI.StopLoading());
+      if (destructive) {
+        return new ItemActions.FetchDataSuccess(result);
+      } else {
+        return new ItemActions.SetShopData(result);
+      }
+    }),
+    catchError(err => {
+      return of(new ItemActions.CallFailure(err));
     })
-    .pipe(
-      map(([result, destructive]: [Item[], boolean]) => {
-        this.store.dispatch(new UI.StopLoading());
-        if (destructive) {
-          return new ItemActions.FetchDataSuccess(result);
-        } else {
-          return new ItemActions.SetShopData(result);
-        }
-      }),
-      catchError(err => {
-        return of(new ItemActions.CallFailure(err));
-      })
-    );
+  );
 
   @Effect()
-  deleteItem: Observable<Action> = this.actions$
-    .ofType(ItemActions.DELETE_ITEM)
-    .map((action: ItemActions.DeleteItem) => action.payload)
-    .mergeMap((item: Item) =>
+  deleteItem: Observable<Action> = this.actions$.pipe(
+    ofType(ItemActions.DELETE_ITEM),
+    map((action: ItemActions.DeleteItem) => action.payload),
+    mergeMap((item: Item) =>
       this.batchDelete(item)
         .then(_ => new ItemActions.CallSuccess('success'))
         .catch(err => new ItemActions.CallFailure('error'))
-    );
+    )
+  );
 
   @Effect()
-  createItem: Observable<Action> = this.actions$
-    .ofType(ItemActions.CREATE_ITEM)
-    .map((action: ItemActions.CreateItem) => action.payload)
-    .mergeMap((item: Item) =>
+  createItem: Observable<Action> = this.actions$.pipe(
+    ofType(ItemActions.CREATE_ITEM),
+    map((action: ItemActions.CreateItem) => action.payload),
+    mergeMap((item: Item) =>
       this.batchCreate(item)
         .then(_ => {
           this.router.navigate([`/profile`]);
           return new ItemActions.CallSuccess('success');
         })
         .catch(err => new ItemActions.CallFailure('error'))
-    );
+    )
+  );
 
   @Effect()
-  buyItem: Observable<Action> = this.actions$
-    .ofType(ItemActions.BUY_ITEM)
-    .map((action: ItemActions.BuyItem) => action.payload)
-    .mergeMap((data: { uid: string; changes: Item }) =>
+  buyItem: Observable<Action> = this.actions$.pipe(
+    ofType(ItemActions.BUY_ITEM),
+    map((action: ItemActions.BuyItem) => action.payload),
+    mergeMap((data: { uid: string; changes: Item }) =>
       this.batchOnBuy(data)
         .then(_ => {
           this.store.dispatch(new ItemActions.IgnoreItem(data.changes));
           return new ItemActions.CallSuccess('You got it!');
         })
         .catch(err => new ItemActions.CallFailure('Sorry someone was faster'))
-    );
+    )
+  );
 
   @Effect({ dispatch: false })
-  callSuccess: Observable<Action> = this.actions$
-    .ofType(ItemActions.CALL_SUCCESS)
-    .map((action: ItemActions.CallSuccess) => action.payload)
-    .do(res => this.errorHandler.show(res, null));
+  callSuccess: Observable<Action> = this.actions$.pipe(
+    ofType(ItemActions.CALL_SUCCESS),
+    map((action: ItemActions.CallSuccess) => action.payload),
+    tap(res => this.errorHandler.show(res, null))
+  );
 
   @Effect({ dispatch: false })
-  callFailure: Observable<Action> = this.actions$
-    .ofType(ItemActions.CALL_FAILURE)
-    .map((action: ItemActions.CallFailure) => action.payload)
-    .do(res => this.errorHandler.show(res, null));
+  callFailure: Observable<Action> = this.actions$.pipe(
+    ofType(ItemActions.CALL_FAILURE),
+    map((action: ItemActions.CallFailure) => action.payload),
+    tap(res => this.errorHandler.show(res, null))
+  );
 
   batchCreate(item: Item): Promise<any> {
     const createBatch = this.db.firestore.batch();
@@ -215,35 +228,37 @@ export class ItemEffects {
     let userUID: string;
     let ignoredList: string[];
 
-    return this.store
-      .select(getUser)
-      .pipe(take(1))
-      .switchMap((user: User) => {
+    return this.store.select(getUser).pipe(
+      take(1),
+      switchMap((user: User) => {
         userUID = user.uid;
         return this.db
           .doc(`users/${userUID}/ignored/list`)
           .valueChanges()
-          .pipe(take(1))
-          .map((list: { list: string[] }) => {
-            if (list !== null) {
-              ignoredList = list.list;
-              let filteredArray: Item[];
-              filteredArray = data.filter(item => {
-                const check: IgnoredItem = {
-                  uid: item.uid,
-                  posted: +item.posted
-                };
-                if (ignoredList.indexOf(JSON.stringify(check)) === -1) {
-                  return true;
-                } else {
-                  return false;
-                }
-              });
-              return filteredArray;
-            } else {
-              return data;
-            }
-          });
-      });
+          .pipe(
+            take(1),
+            map((list: { list: string[] }) => {
+              if (list) {
+                ignoredList = list.list;
+                let filteredArray: Item[];
+                filteredArray = data.filter(item => {
+                  const check: IgnoredItem = {
+                    uid: item.uid,
+                    posted: +item.posted
+                  };
+                  if (ignoredList.indexOf(JSON.stringify(check)) === -1) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                });
+                return filteredArray;
+              } else {
+                return data;
+              }
+            })
+          );
+      })
+    );
   }
 }

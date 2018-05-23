@@ -18,11 +18,10 @@ import { ShellModule } from './shell/shell.module';
 import { WelcomeModule } from './welcome/welcome.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler } from './shared/error-snackbar.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -39,9 +38,12 @@ import { ErrorHandler } from './shared/error-snackbar.service';
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production
+    }),
+    ServiceWorkerModule.register('/ngsw-worker.js', {
+      enabled: environment.production
     })
   ],
   providers: [AuthService, ChatService, ErrorHandler],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
