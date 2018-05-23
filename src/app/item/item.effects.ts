@@ -20,10 +20,6 @@ import {
   tap,
   mergeMap
 } from 'rxjs/operators';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
 
 import { ErrorHandler } from './../shared/error-snackbar.service';
 import { getUser } from './../app.reducer';
@@ -196,10 +192,9 @@ export class ItemEffects {
           ref.where('buyer', '==', query.ownerUID).where('status', '==', 'sold')
         )
         .valueChanges();
-      return zip(itemsBought, itemsSold).map(([bought, sold]) => [
-        ...bought,
-        ...sold
-      ]);
+      return zip(itemsBought, itemsSold).pipe(
+        map(([bought, sold]) => [...bought, ...sold])
+      );
     } else if (query.ownerUID) {
       return this.db
         .collection('users')
