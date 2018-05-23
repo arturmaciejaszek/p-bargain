@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { MatDialog, MatTableDataSource, MatPaginator } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { take } from 'rxjs/operators';
@@ -52,25 +52,41 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading$ = this.store.select(getIsLoading);
 
+    this.setGoogleMapsAutocomplete();
+
+    this.fetchUserFromStore();
+
+    this.fetchUserItemsFromStore();
+
+    this.userItems.paginator = this.tablePaginator;
+
+    this.townControl = new FormControl();
+  }
+
+  fetchUserFromStore() {
     this.sub.push(
-      this.store.select(getUser).subscribe((user: User) => {
+      this.store.pipe(select(getUser)).subscribe((user: User) => {
         if (user && user.uid) {
           this.user = user;
           this.getUserItems();
         }
       })
     );
+  }
 
+  getUserItems() {
+    this.store.dispatch(new ItemActions.FetchData({ ownerUID: this.user.uid }));
+  }
+
+  fetchUserItemsFromStore() {
     this.sub.push(
       this.store
-        .select(fromItem.selectAll)
+        .pipe(select(fromItem.selectAll))
         .subscribe((res: Item[]) => (this.userItems.data = res))
     );
+  }
 
-    this.userItems.paginator = this.tablePaginator;
-
-    this.townControl = new FormControl();
-
+  setGoogleMapsAutocomplete() {
     const autocomplete = new google.maps.places.Autocomplete(
       this.townInput.nativeElement,
       { types: ['(cities)'] }
@@ -113,10 +129,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
   updateFastBuy(event: any) {
     this.authService.updateData(this.user.uid, { fastBuy: event.value });
-  }
-
-  getUserItems() {
-    this.store.dispatch(new ItemActions.FetchData({ ownerUID: this.user.uid }));
   }
 
   deleteItem(item: Item) {

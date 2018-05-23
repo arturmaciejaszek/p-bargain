@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Router } from '@angular/router';
 
 import * as fromRoot from '../app.reducer';
@@ -14,7 +14,7 @@ export class WelcomeComponent implements OnInit {
   constructor(private router: Router, private store: Store<fromRoot.State>) {}
 
   ngOnInit() {
-    this.store.select(getIsAuth).subscribe(auth => {
+    this.store.pipe(select(getIsAuth)).subscribe(auth => {
       if (auth === false) {
         this.router.navigate(['/auth']);
       } else if (auth === true) {

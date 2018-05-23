@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/observable';
 import { NgForm } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 
 import { AuthData } from './../auth-data.model';
 import { AuthService } from './../auth.service';
@@ -17,10 +17,13 @@ export class LoginComponent implements OnInit {
   @Output() regEmitter = new EventEmitter<void>();
   isLoading$: Observable<boolean>;
 
-  constructor(private authService: AuthService, private store: Store<fromRoot.State>) { }
+  constructor(
+    private authService: AuthService,
+    private store: Store<fromRoot.State>
+  ) {}
 
   ngOnInit() {
-    this.isLoading$ = this.store.select(fromRoot.getIsLoading);
+    this.isLoading$ = this.store.pipe(select(fromRoot.getIsLoading));
   }
 
   onSubmit(form: NgForm) {
@@ -30,5 +33,4 @@ export class LoginComponent implements OnInit {
   emitRegCall() {
     this.regEmitter.emit();
   }
-
 }

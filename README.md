@@ -1,14 +1,15 @@
+# Disclaimer
+
+This project is meant to be the showcase of my programming abilities using Angular 5.
+The sole purpose being to show whatever I am employable.
+
 # Bargain
 
-This project is meant to be the show case of my programming abilities using Angular 5.
+The idea behind this app is to let users post items (most likely used ones) for quick sale.
+You select a town and browse through the goods in a given location
+and you can either buy it off on the spot or ignore it and never see it again
+(kind of a tinder for sales).
 
-I will deploy it once it's done. For now I believe it to be somewhere in the middle of what's it's supposed to be.
-The new ideas for features keep coming thought.
+Once you have bought something you can chat with the seller to finalize the deal on your own accord.
 
-
-# Disclaimer
-I know that the architecture of the project is a bit wonky and several bad calls has been made (the worst one being not storing the user within the ngrx state) but I preferred to work with it as is for the sake of learning different approches.
-
-
-
-
+That's pretty much it.
